@@ -34,6 +34,9 @@ public class Usuario implements Serializable{
 	@Column(name="perfil", nullable=false)
 	private String perfilUsuario;
 	
+	@Column(name="ativo", nullable=false)
+	private String ativolUsuario;
+	
 	public Usuario() {}
 
 	public String getNomeUsuario() {
@@ -42,10 +45,6 @@ public class Usuario implements Serializable{
 
 	public void setNomeUsuario(String nomeUsuario) {
 		this.nomeUsuario = nomeUsuario;
-	}
-
-	public String getSenhaUsuario() {
-		return senhaUsuario;
 	}
 
 	public void setSenhaUsuario(String senhaUsuario) {
@@ -74,6 +73,14 @@ public class Usuario implements Serializable{
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public String getAtivolUsuario() {
+		return ativolUsuario;
+	}
+
+	public void setAtivolUsuario(String ativolUsuario) {
+		this.ativolUsuario = ativolUsuario;
 	}
 	
 }

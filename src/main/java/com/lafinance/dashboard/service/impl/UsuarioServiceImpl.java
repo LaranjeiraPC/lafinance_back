@@ -3,7 +3,7 @@ package com.lafinance.dashboard.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.model.Usuario;
+import com.lafinance.dashboard.dto.UsuarioDTO;
 import com.lafinance.dashboard.repository.UsuarioRepository;
 import com.lafinance.dashboard.service.UsuarioService;
 
@@ -17,9 +17,12 @@ public class UsuarioServiceImpl implements UsuarioService{
 		this.repository = repository;
 	}
 	
+	/**
+	 *Consultar usuario válido
+	 */
 	@Override
-	public Usuario consultarUsuario(String usuario, String senha) {
-		return repository.consultarUsuario();
+	public UsuarioDTO consultarUsuario(String usuario, String senha) {
+		return new UsuarioDTO(repository.consultarUsuario(usuario, senha));
 	}
 
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lafinance.dashboard.model.Usuario;
+import com.lafinance.dashboard.dto.UsuarioDTO;
 import com.lafinance.dashboard.service.UsuarioService;
 
 @CrossOrigin
@@ -22,7 +22,7 @@ public class UsuarioResource {
 	}
 
 	@GetMapping("/autenticar/{usuario}/{senha}")
-	public ResponseEntity<Usuario> getLogin(
+	public ResponseEntity<UsuarioDTO> getLogin(
 			@PathVariable(name = "usuario") String usuario,
 			@PathVariable(name = "senha") String senha) {
 		try {

@@ -1,7 +1,7 @@
 package com.lafinance.dashboard.service;
 
-import com.lafinance.dashboard.model.Usuario;
+import com.lafinance.dashboard.dto.UsuarioDTO;
 
 public interface UsuarioService {
-	Usuario consultarUsuario(String usuario, String senha);
+	UsuarioDTO consultarUsuario(String usuario, String senha);
 }
