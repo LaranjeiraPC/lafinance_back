@@ -14,6 +14,7 @@ public class UsuarioDTO implements Serializable{
 	private String nomeUsuario;
 	private String emailUsuario;
 	private String perfilUsuario;
+	private String ativoUsuario;
 	
 	public UsuarioDTO() {}
 	
@@ -22,6 +23,7 @@ public class UsuarioDTO implements Serializable{
 		this.nomeUsuario = user.getNomeUsuario();
 		this.perfilUsuario = user.getPerfilUsuario();
 		this.emailUsuario = user.getEmailUsuario();
+		this.ativoUsuario = user.getAtivoUsuario();
 	}
 
 	public Integer getId() {
@@ -54,5 +56,13 @@ public class UsuarioDTO implements Serializable{
 
 	public void setPerfilUsuario(String perfilUsuario) {
 		this.perfilUsuario = perfilUsuario;
+	}
+
+	public String getAtivoUsuario() {
+		return ativoUsuario;
+	}
+
+	public void setAtivoUsuario(String ativoUsuario) {
+		this.ativoUsuario = ativoUsuario;
 	}
 }

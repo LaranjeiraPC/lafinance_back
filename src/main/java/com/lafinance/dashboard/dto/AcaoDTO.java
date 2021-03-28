@@ -14,9 +14,13 @@ public class AcaoDTO {
 	
 	public AcaoDTO(Acao acao) {
 		setId(acao.getId());
-		setNomecao(acao.getNomeAcao());
+		setNomeAcao(acao.getNomeAcao());
 		setAtivoAcao(acao.getAtivoAcao());
 		setUsuario(acao.getUsuario());
+	}
+	
+	public AcaoDTO(String acao) {
+		setNomeAcao(acao);
 	}
 	
 	public Integer getId() {
@@ -25,12 +29,7 @@ public class AcaoDTO {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getNomeAcao() {
-		return nomeAcao;
-	}
-	public void setNomecao(String nomeAcao) {
-		this.nomeAcao = nomeAcao;
-	}
+	
 	public String getAtivoAcao() {
 		return ativoAcao;
 	}
@@ -45,5 +44,14 @@ public class AcaoDTO {
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
+
+	public String getNomeAcao() {
+		return nomeAcao;
+	}
+
+	public void setNomeAcao(String nomeAcao) {
+		this.nomeAcao = nomeAcao;
+	}
+
 	
 }

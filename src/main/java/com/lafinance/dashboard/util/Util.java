@@ -18,6 +18,10 @@ public class Util {
 		return new BigDecimal(valor.replace(".", "").replace(",", "."));
 	}
 	
+	public static BigDecimal converterParaBigDecimalSemReplace(String valor) {
+		return new BigDecimal(valor);
+	}
+	
 	private Util() {
 		throw new IllegalStateException("Utility class");
 	}

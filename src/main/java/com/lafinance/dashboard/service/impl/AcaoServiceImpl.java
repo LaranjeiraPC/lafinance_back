@@ -1,10 +1,12 @@
 package com.lafinance.dashboard.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lafinance.dashboard.dto.AcaoDTO;
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.model.Usuario;
 import com.lafinance.dashboard.repository.AcaoRepository;
@@ -27,8 +29,7 @@ public class AcaoServiceImpl implements AcaoService {
 
 	@Override
 	public List<Acao> carregarAcoes(String usuario) {
-		Usuario user = usuarioRepository.consultarNome(usuario);
-		return repository.consultarAcoes(user);
+		return repository.consultarAcoes(usuario);
 	}
 
 	public Response salvarAcao(Object[] dados) {
@@ -43,7 +44,7 @@ public class AcaoServiceImpl implements AcaoService {
 		
 		acao.setUsuario(user);
 
-		Acao acaoTemp = repository.consultarAcao(user, acao.getNomeAcao());
+		Acao acaoTemp = repository.consultarAcao(acao.getUsuario().getNomeUsuario(), acao.getNomeAcao());
 		
 		if (acaoTemp == null) {
 			repository.saveAndFlush(acao);
@@ -104,6 +105,26 @@ public class AcaoServiceImpl implements AcaoService {
 			response.setMensagem("Erro ao excluir registro!");
 			return response;
 		}
+	}
+
+	@Override
+	public Acao consultarAcaoPeloId(Integer id) {
+		return repository.consultarAcaoPeloId(id);
+	}
+
+	@Override
+	public List<AcaoDTO> carregarAcoesNome(String usuario) {
+		List<Acao> acaoList = repository.consultarAcoesNome(usuario);
+		List<AcaoDTO> dtoList = new ArrayList<>();
+		
+		acaoList.forEach(l -> dtoList.add(new AcaoDTO(l.getNomeAcao())));
+		
+		return dtoList;
+	}
+
+	@Override
+	public Acao consultarAcaoNome(String nome) {
+		return repository.consultarAcaoNome(nome);
 	}
 
 }

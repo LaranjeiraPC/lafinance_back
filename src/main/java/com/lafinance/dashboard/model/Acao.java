@@ -35,6 +35,10 @@ public class Acao implements Serializable{
 	private Usuario usuario;
 	
 	public Acao() {}
+	
+	public Acao(String acao) {
+		this.nomeAcao = acao;
+	}
 
 	public Integer getId() {
 		return id;

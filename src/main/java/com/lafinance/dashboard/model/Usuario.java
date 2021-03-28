@@ -35,9 +35,17 @@ public class Usuario implements Serializable{
 	private String perfilUsuario;
 	
 	@Column(name="ativo", nullable=false)
-	private String ativolUsuario;
+	private String ativoUsuario;
 	
 	public Usuario() {}
+	
+	public Usuario(Usuario user) {
+		this.id = user.getId();
+		this.nomeUsuario = user.getNomeUsuario();
+		this.emailUsuario = user.getEmailUsuario();
+		this.perfilUsuario = user.getPerfilUsuario();
+		this.ativoUsuario = user.getAtivoUsuario();
+	}
 
 	public String getNomeUsuario() {
 		return nomeUsuario;
@@ -75,12 +83,12 @@ public class Usuario implements Serializable{
 		this.id = id;
 	}
 
-	public String getAtivolUsuario() {
-		return ativolUsuario;
+	public String getAtivoUsuario() {
+		return ativoUsuario;
 	}
 
-	public void setAtivolUsuario(String ativolUsuario) {
-		this.ativolUsuario = ativolUsuario;
+	public void setAtivoUsuario(String ativoUsuario) {
+		this.ativoUsuario = ativoUsuario;
 	}
 	
 }

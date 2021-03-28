@@ -2,20 +2,25 @@ package com.lafinance.dashboard.service.impl;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lafinance.dashboard.dto.CompraDTO;
+import com.lafinance.dashboard.dto.InvestimentoDTO;
 import com.lafinance.dashboard.model.Acao;
-import com.lafinance.dashboard.model.Compra;
 import com.lafinance.dashboard.model.Investimento;
 import com.lafinance.dashboard.model.Usuario;
-import com.lafinance.dashboard.repository.AcaoRepository;
-import com.lafinance.dashboard.repository.CompraRepository;
 import com.lafinance.dashboard.repository.InvestimentoRepository;
-import com.lafinance.dashboard.repository.UsuarioRepository;
+import com.lafinance.dashboard.service.AcaoService;
+import com.lafinance.dashboard.service.CompraService;
 import com.lafinance.dashboard.service.InvestimentoService;
+import com.lafinance.dashboard.service.LogService;
+import com.lafinance.dashboard.service.UsuarioService;
 import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;
 import com.lafinance.dashboard.util.Util;
@@ -23,44 +28,51 @@ import com.lafinance.dashboard.util.Util;
 @Service
 @Transactional
 public class InvestimentoServiceImpl implements InvestimentoService {
+	
+	private final Logger log = LoggerFactory.getLogger(InvestimentoServiceImpl.class);
 
 	private Integer quantidadeTotal = 0;
 	private BigDecimal total = BigDecimal.ZERO;
 
 	private final InvestimentoRepository investimentoRepository;
-	private final AcaoRepository repositoryAcao;
-	private final UsuarioRepository usuarioRepository;
-	private final CompraRepository compraRepository;
+	private final AcaoService acaoService;
+	private final UsuarioService usuarioService;
+	private final CompraService compraService;
+	private final LogService logService;
 
-	public InvestimentoServiceImpl(InvestimentoRepository investimentoRepository, AcaoRepository repositoryAcao,
-			CompraRepository compraRepository, UsuarioRepository usuarioRepository) {
+	public InvestimentoServiceImpl(InvestimentoRepository investimentoRepository, AcaoService acaoService,
+			CompraService compraService, UsuarioService usuarioService, LogService logService) {
 		this.investimentoRepository = investimentoRepository;
-		this.repositoryAcao = repositoryAcao;
-		this.compraRepository = compraRepository;
-		this.usuarioRepository = usuarioRepository;
+		this.acaoService = acaoService;
+		this.compraService = compraService;
+		this.usuarioService = usuarioService;
+		this.logService = logService;
 	}
 
 	@Override
-	public Response salvarCompra(Object[] dados) {
+	public Response salvarInvestimento(Object[] dados) {
 
 		Response response = new Response();
-
-		Acao acaoTemp = repositoryAcao.consultarAcaoPeloId((Integer) dados[0]);
-
-		Investimento investimentoTemp = investimentoRepository.consultarInvestimento(acaoTemp.getUsuario(), acaoTemp);
-
-		if (investimentoTemp != null) {
-			montarInvestimento(dados, investimentoTemp, acaoTemp, false);
-		} else {
-			Investimento investimento = new Investimento();
-			montarInvestimento(dados, investimento, acaoTemp, true);
-			investimentoTemp = investimento;
-		}
+		
+		quantidadeTotal = 0;
+		total = BigDecimal.ZERO;
 
 		try {
+			Acao acaoTemp = acaoService.consultarAcaoNome((String) dados[0]);
+	
+			Investimento investimentoTemp = investimentoRepository.consultarInvestimento(acaoTemp.getUsuario(), acaoTemp);
+	
+			if (investimentoTemp != null) {
+				montarInvestimento(dados, investimentoTemp, acaoTemp);
+			} else {
+				Investimento investimento = new Investimento();
+				montarInvestimento(dados, investimento, acaoTemp);
+				investimentoTemp = investimento;
+			}
+		
 			Investimento investimento = investimentoRepository.saveAndFlush(investimentoTemp);
 			
-			compraRepository.save(novaCompra(dados, investimento));
+			compraService.salvarCompra(dados, investimento);
 			
 			response.setTipo(TipoResponse.SUCESSO);
 			response.setMensagem("Registro salvo com sucesso!");
@@ -72,58 +84,59 @@ public class InvestimentoServiceImpl implements InvestimentoService {
 		return response;
 	}
 
-	private void montarInvestimento(Object[] dados, Investimento investimento, Acao acaoTemp, boolean indicador) {
+	private void montarInvestimento(Object[] dados, Investimento investimento, Acao acaoTemp) {
 		investimento.setAcao(acaoTemp);
 		investimento.setUsuario(acaoTemp.getUsuario());
 		investimento.setUltimaDataAtualizacao(LocalDate.now());
 		investimento.setUltimaDataCompra(Util.montarData((String) dados[4]));
 		
-		atualizarQuantidadeTotalCompra(investimento, dados, indicador);
+		atualizarQuantidadeTotalCompra(investimento, dados);
 		
 	}
 	
-	private Investimento atualizarQuantidadeTotalCompra(Investimento investimento, Object[] dados, boolean indicador) {
+	private Investimento atualizarQuantidadeTotalCompra(Investimento investimento, Object[] dados) {
 		Investimento investimentoTemp = investimento;
 		
-		if(indicador && investimentoTemp.getId() != null) {
-			List<Compra> compraTemp = compraRepository.consultarInvestimento(investimentoTemp);
+		if(investimentoTemp.getId() != null) {
+			List<CompraDTO> compraTemp = compraService.consultarInvestimento(investimentoTemp);
 			
-			compraTemp.forEach(det -> quantidadeTotal = quantidadeTotal + det.getQuantidade());
+			if(!compraTemp.isEmpty()) {
+				compraTemp.forEach(det -> quantidadeTotal = quantidadeTotal + det.getQuantidade());
+				quantidadeTotal = quantidadeTotal + Integer.parseInt((String) dados[1]);
 
-			compraTemp.forEach(det -> total = total.add(det.getTotalCompra()));
-			
-			investimentoTemp.setQuantidade(quantidadeTotal);
-			investimentoTemp.setTotalCompra(total);
+				compraTemp.forEach(det -> total = total.add(det.getTotalCompra()));
+				total = total.add(Util.converterParaBigDecimalSemReplace((String) dados[3]));	
+				
+				investimentoTemp.setQuantidade(quantidadeTotal);
+				investimentoTemp.setTotalCompra(total);
+			}else {
+				investimentoTemp.setQuantidade(Integer.parseInt((String) dados[1]));
+				investimentoTemp.setTotalCompra(Util.converterParaBigDecimalSemReplace((String) dados[3]));
+			}					
 		}else {
 			investimentoTemp.setQuantidade(Integer.parseInt((String) dados[1]));
-			investimentoTemp.setTotalCompra(Util.converterParaBigDecimal((String) dados[3]));
+			investimentoTemp.setTotalCompra(Util.converterParaBigDecimalSemReplace((String) dados[3]));
 		}
 
-		investimentoTemp.setUltimoValorCompra(Util.converterParaBigDecimal((String) dados[2]));
+		investimentoTemp.setUltimoValorCompra(Util.converterParaBigDecimalSemReplace((String) dados[2]));
 		
 		return investimentoTemp;
 	}
 
-	private Compra novaCompra(Object[] dados, Investimento investimento) {
-		Compra compra = new Compra();
-		compra.setQuantidade(Integer.parseInt((String) dados[1]));
-		compra.setTotalCompra(Util.converterParaBigDecimal((String) dados[3]));
-		compra.setValorCompra(Util.converterParaBigDecimal((String) dados[2]));
-		compra.setDataCompra(Util.montarData((String) dados[4]));
-		compra.setIndicadorAtivo("S");
-		compra.setInvestimento(investimento);
-		return compra;
-	}
-
 	@Override
-	public List<Investimento> consultarInvestimento(String usuario) {
-		List<Investimento> compraList;
-
-		Usuario user = usuarioRepository.consultarNome(usuario);
-
-		compraList = investimentoRepository.consultarListaInvestimento(user);
-
-		return compraList;
+	public List<InvestimentoDTO> consultarInvestimento(String usuario) {
+		log.debug("Consultar investimentos do usuario: {}", usuario);
+		
+		List<InvestimentoDTO> compraListDTO = new ArrayList<>();
+		
+		try {
+			Usuario user = usuarioService.consultarNome(usuario);
+			investimentoRepository.consultarListaInvestimento(usuario).forEach(i -> compraListDTO.add(new InvestimentoDTO(i)));			
+			logService.salvarLog(user, "Consultar investimentos do usuario: {}" + usuario);
+		}catch (Exception e) {
+			log.warn(e.getMessage());
+		}
+		return compraListDTO;
 	}
 
 }

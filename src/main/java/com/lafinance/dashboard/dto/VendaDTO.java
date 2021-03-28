@@ -1,75 +1,37 @@
-package com.lafinance.dashboard.model;
+package com.lafinance.dashboard.dto;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import com.lafinance.dashboard.model.Compra;
+import com.lafinance.dashboard.model.Investimento;
 
-@Entity
-@Table(name = "venda")
-public class Venda implements Serializable {
+public class VendaDTO {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 720249669890146068L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
-	@Column(name = "quantidade", nullable = false)
 	private Integer quantidade;
-
-	@Column(name = "totalvenda", nullable = false)
 	private BigDecimal totalVenda;
-
-	@Column(name = "valorvenda", nullable = false)
 	private BigDecimal valorVenda;
-
-	@Column(name = "datavenda", nullable = false)
 	private LocalDate dataVenda;
-
-	@Column(name = "lucrobruto", nullable = false)
 	private BigDecimal lucroBruto;
-
-	@ManyToOne
-	@JoinColumn(name = "investimento", nullable = false)
-	private Investimento investimento;
-
-	@ManyToOne
-	@JoinColumn(name = "compra", nullable = false)
-	private Compra compra;
-
-	@Transient
 	private String acao;
+	private Investimento investimento;
+	private Compra compra;
+	private String usuario;
 
-	@Transient
 	private Integer idInvestimento;
 
-	@Transient
-	private String usuario;
-	
-	public Venda() {
+	public VendaDTO() {
 	}
 
-	public Venda(String acao, Integer quantidade, BigDecimal valor, Integer investimento) {
+	public VendaDTO(String acao, Integer quantidade, BigDecimal valor, Integer investimento) {
 		this.acao = acao;
 		this.quantidade = quantidade;
 		this.valorVenda = valor;
 		this.idInvestimento = investimento;
 	}
 
-	public Venda(Integer id, String acao, Integer quantidade, BigDecimal totalVenda, BigDecimal valor,
+	public VendaDTO(Integer id, String acao, Integer quantidade, BigDecimal totalVenda, BigDecimal valor,
 			BigDecimal lucroBruto, LocalDate dataVenda, Compra compra, String usuario) {
 		this.id = id;
 		this.acao = acao;
@@ -138,14 +100,6 @@ public class Venda implements Serializable {
 		this.investimento = investimento;
 	}
 
-	public Compra getCompra() {
-		return compra;
-	}
-
-	public void setCompra(Compra compra) {
-		this.compra = compra;
-	}
-
 	public String getAcao() {
 		return acao;
 	}
@@ -154,16 +108,20 @@ public class Venda implements Serializable {
 		this.acao = acao;
 	}
 
+	public Compra getCompra() {
+		return compra;
+	}
+
+	public void setCompra(Compra compra) {
+		this.compra = compra;
+	}
+
 	public Integer getIdInvestimento() {
 		return idInvestimento;
 	}
 
 	public void setIdInvestimento(Integer idInvestimento) {
 		this.idInvestimento = idInvestimento;
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public String getUsuario() {

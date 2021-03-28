@@ -1,148 +1,114 @@
-package com.lafinance.dashboard.model;
+package com.lafinance.dashboard.dto;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+import com.lafinance.dashboard.model.Acao;
+import com.lafinance.dashboard.model.Compra;
+import com.lafinance.dashboard.model.Investimento;
+import com.lafinance.dashboard.model.Usuario;
+import com.lafinance.dashboard.model.Venda;
 
-@Entity
-@Table(name = "investimento")
-public class Investimento implements Serializable {
+public class InvestimentoDTO {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1030098088191270895L;
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-
-	@ManyToOne
-	@JoinColumn(name = "acao", nullable = false)
 	private Acao acao;
-
-	@ManyToOne
-	@JoinColumn(name = "usuario", nullable = false)
 	private Usuario usuario;
-
-	@Column(name = "quantidade", nullable = false)
 	private Integer quantidade;
-
-	@Column(name = "ultimovalorcompra", nullable = false)
 	private BigDecimal ultimoValorCompra;
-
-	@Column(name = "totalcompra", nullable = false)
 	private BigDecimal totalCompra;
-
-	@Column(name = "ultimadataatualizacao", nullable = false)
 	private LocalDate ultimaDataAtualizacao;
-
-	@Column(name = "ultimadatavenda", nullable = false)
 	private LocalDate ultimaDataVenda;
-
-	@Column(name = "ultimadatacompra", nullable = false)
 	private LocalDate ultimaDataCompra;
-
-	@Transient
 	private String nomeAcao;
-
-	public Investimento() {
+	private List<Venda> venda;
+	private  List<Compra> compra;
+	
+	public InvestimentoDTO() {}
+	
+	public InvestimentoDTO(Investimento investimento) {
+		this.id = investimento.getId();
+		this.nomeAcao = investimento.getNomeAcao();
+		this.quantidade = investimento.getQuantidade();
+		this.ultimoValorCompra = investimento.getUltimoValorCompra();
+	}
+	
+	public List<Venda> getVenda() {
+		return venda;
 	}
 
-	public Investimento(Integer id, String acao, Integer quantidade, BigDecimal ultimoValor) {
-		this.id = id;
-		this.nomeAcao = acao;
-		this.quantidade = quantidade;
-		this.ultimoValorCompra = ultimoValor;
+	public void setVenda(List<Venda> venda) {
+		this.venda = venda;
 	}
 
+	public List<Compra> getCompra() {
+		return compra;
+	}
+
+	public void setCompra(List<Compra> compra) {
+		this.compra = compra;
+	}
+	
 	public Integer getId() {
 		return id;
 	}
-
 	public void setId(Integer id) {
 		this.id = id;
 	}
-
 	public Acao getAcao() {
 		return acao;
 	}
-
 	public void setAcao(Acao acao) {
 		this.acao = acao;
 	}
-
 	public Usuario getUsuario() {
 		return usuario;
 	}
-
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
 	}
-
 	public Integer getQuantidade() {
 		return quantidade;
 	}
-
 	public void setQuantidade(Integer quantidade) {
 		this.quantidade = quantidade;
 	}
-
 	public BigDecimal getUltimoValorCompra() {
 		return ultimoValorCompra;
 	}
-
 	public void setUltimoValorCompra(BigDecimal ultimoValorCompra) {
 		this.ultimoValorCompra = ultimoValorCompra;
 	}
-
 	public BigDecimal getTotalCompra() {
 		return totalCompra;
 	}
-
 	public void setTotalCompra(BigDecimal totalCompra) {
 		this.totalCompra = totalCompra;
 	}
-
 	public LocalDate getUltimaDataAtualizacao() {
 		return ultimaDataAtualizacao;
 	}
-
 	public void setUltimaDataAtualizacao(LocalDate ultimaDataAtualizacao) {
 		this.ultimaDataAtualizacao = ultimaDataAtualizacao;
 	}
-
 	public LocalDate getUltimaDataVenda() {
 		return ultimaDataVenda;
 	}
-
 	public void setUltimaDataVenda(LocalDate ultimaDataVenda) {
 		this.ultimaDataVenda = ultimaDataVenda;
 	}
-
 	public LocalDate getUltimaDataCompra() {
 		return ultimaDataCompra;
 	}
-
 	public void setUltimaDataCompra(LocalDate ultimaDataCompra) {
 		this.ultimaDataCompra = ultimaDataCompra;
 	}
-
 	public String getNomeAcao() {
 		return nomeAcao;
 	}
-
 	public void setNomeAcao(String nomeAcao) {
 		this.nomeAcao = nomeAcao;
 	}
+	
 }

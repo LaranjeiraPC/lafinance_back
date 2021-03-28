@@ -9,10 +9,10 @@ import com.lafinance.dashboard.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
 
-	@Query("SELECT u FROM Usuario u where u.nomeUsuario = :usuario and u.senhaUsuario = :senha ")
+	@Query("SELECT new Usuario(u) FROM Usuario u where u.nomeUsuario = :usuario and u.senhaUsuario = :senha and u.ativoUsuario = 'A'")
 	Usuario consultarUsuario(String usuario, String senha);
-	
-	@Query("SELECT u FROM Usuario u where u.nomeUsuario = :usuario")
+
+	@Query("SELECT new Usuario(u) FROM Usuario u where u.nomeUsuario = :usuario")
 	Usuario consultarNome(String usuario);
-	
+
 }
