@@ -30,54 +30,40 @@ public class VendaResource {
 		this.vendaService = vendaService;
 	}
 
-	@GetMapping("/exibir/{usuario}")
-	public ResponseEntity<List<VendaDTO>> carregarVendas(
-			@PathVariable(name = "usuario") String usuario) {
-		log.debug("Carregar dados venda: {}", usuario);
+	@CrossOrigin
+	@PostMapping("/venda/")
+	public ResponseEntity<Response> salvarVenda(@RequestBody Object[] acao) {
+
+		log.debug("API - Armazenar venda");
+
 		try {
-			return ResponseEntity.ok().body(vendaService.consultarVendas(usuario));
-		} catch (Exception E) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@PostMapping("/salvar/")
-	public ResponseEntity<Response> salvarVenda(
-			@RequestBody Object[] venda) {
-		
-		log.debug("Request to save Venda: {}", venda);
-				
-		try {
-			return ResponseEntity.ok().body(vendaService.salvarVenda(venda));
+			return ResponseEntity.ok().body(vendaService.salvarVenda(acao));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
-		
 	}
-	
-	@GetMapping("/excluir/")
-	public ResponseEntity<Response> excluirVenda(
-			@RequestBody Object[] venda) {
-		
-		log.debug("Request to delete Venda: {}", venda);
-				
+
+	@CrossOrigin
+	@GetMapping("/consulta/ano/mes/{ano}/{mes}")
+	public ResponseEntity<List<VendaDTO>> consultarVendasPeloMesSelecionado(@PathVariable(name = "ano") String ano,
+			@PathVariable(name = "mes") String mes) {
+		log.debug("API - Consultar vendas pelo ano e mês");
 		try {
-			return ResponseEntity.ok().body(vendaService.excluirVenda(venda));
+			return ResponseEntity.ok().body(vendaService.consultarVendasPeloAnoMesSelecionado(ano, mes));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
-		
 	}
 	
-	@GetMapping("/exibir/det/{id}")
-	public ResponseEntity<List<VendaDTO>> getLogin(
-			@PathVariable(name = "id") Integer id) {
-		log.debug("Carregar dados venda: {}", id);
+	@CrossOrigin
+	@GetMapping("/consulta/detalhes/{id}")
+	public ResponseEntity<VendaDTO> consultarDetalhesVenda(@PathVariable(name = "id") String id) {
+		log.debug("API - Consultar vendas pelo id");
 		try {
-			return ResponseEntity.ok().body(vendaService.consultarVenda(id));
-		} catch (Exception E) {
+			return ResponseEntity.ok().body(vendaService.consultarDetalhesVenda(id));
+		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
 	}
-	
+
 }

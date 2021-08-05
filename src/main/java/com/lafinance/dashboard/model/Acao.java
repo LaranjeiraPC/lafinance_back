@@ -1,6 +1,8 @@
 package com.lafinance.dashboard.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -24,21 +26,32 @@ public class Acao implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(name="nome", nullable=false)
-	private String nomeAcao;
-	
-	@Column(name="ativo", nullable=false)
-	private String ativoAcao;
-	
 	@ManyToOne
-	@JoinColumn(name = "usuario", nullable = false)
-	private Usuario usuario;
+	@JoinColumn(name = "ativo", nullable = false)
+	private Ativo ativo;
+	 
+	@Column(name="quantidade", nullable=false)
+	private Integer quantidade;
+	
+	@Column(name="valorbrutopago", nullable=false)
+	private BigDecimal valorBrutoPago;
+	
+	@Column(name="valorativopago", nullable=false)
+	private BigDecimal valorAtivoPago;
+	
+	@Column(name="datacompra", nullable=false)
+	private LocalDate dataCompra;
+	
+	@Column(name="datacriacao", nullable=false)
+	private LocalDate mesCriacao;
+	
+	@Column(name="dataatualizacao", nullable=true)
+	private LocalDate mesAtualizacao;
+	
+	@Column(name="status", nullable=true)
+	private String status;
 	
 	public Acao() {}
-	
-	public Acao(String acao) {
-		this.nomeAcao = acao;
-	}
 
 	public Integer getId() {
 		return id;
@@ -48,27 +61,69 @@ public class Acao implements Serializable{
 		this.id = id;
 	}
 
-	public String getNomeAcao() {
-		return nomeAcao;
+	public Ativo getAtivo() {
+		return ativo;
 	}
 
-	public void setNomeAcao(String nomeAcao) {
-		this.nomeAcao = nomeAcao;
+	public void setAtivo(Ativo ativo) {
+		this.ativo = ativo;
 	}
 
-	public String getAtivoAcao() {
-		return ativoAcao;
+	public Integer getQuantidade() {
+		return quantidade;
 	}
 
-	public void setAtivoAcao(String ativoAcao) {
-		this.ativoAcao = ativoAcao;
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public BigDecimal getValorBrutoPago() {
+		return valorBrutoPago;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public void setValorBrutoPago(BigDecimal valorBrutoPago) {
+		this.valorBrutoPago = valorBrutoPago;
 	}
+
+	public BigDecimal getValorAtivoPago() {
+		return valorAtivoPago;
+	}
+
+	public void setValorAtivoPago(BigDecimal valorAtivoPago) {
+		this.valorAtivoPago = valorAtivoPago;
+	}
+
+	public LocalDate getMesCriacao() {
+		return mesCriacao;
+	}
+
+	public void setMesCriacao(LocalDate mesCriacao) {
+		this.mesCriacao = mesCriacao;
+	}
+
+	public LocalDate getMesAtualizacao() {
+		return mesAtualizacao;
+	}
+
+	public void setMesAtualizacao(LocalDate mesAtualizacao) {
+		this.mesAtualizacao = mesAtualizacao;
+	}
+
+	public LocalDate getDataCompra() {
+		return dataCompra;
+	}
+
+	public void setDataCompra(LocalDate dataCompra) {
+		this.dataCompra = dataCompra;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+
 }

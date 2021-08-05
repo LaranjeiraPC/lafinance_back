@@ -3,45 +3,32 @@ package com.lafinance.dashboard.dto;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.lafinance.dashboard.model.Compra;
-import com.lafinance.dashboard.model.Investimento;
+import com.lafinance.dashboard.model.Ativo;
+import com.lafinance.dashboard.model.Venda;
 
 public class VendaDTO {
 
 	private Integer id;
+	private Ativo ativo;
 	private Integer quantidade;
-	private BigDecimal totalVenda;
-	private BigDecimal valorVenda;
+	private BigDecimal valorBrutoVenda;
+	private BigDecimal valorAtivoVenda;
 	private LocalDate dataVenda;
-	private BigDecimal lucroBruto;
-	private String acao;
-	private Investimento investimento;
-	private Compra compra;
-	private String usuario;
-
-	private Integer idInvestimento;
+	private LocalDate mesCriacao;
+	private LocalDate mesAtualizacao;
 
 	public VendaDTO() {
 	}
 
-	public VendaDTO(String acao, Integer quantidade, BigDecimal valor, Integer investimento) {
-		this.acao = acao;
-		this.quantidade = quantidade;
-		this.valorVenda = valor;
-		this.idInvestimento = investimento;
-	}
-
-	public VendaDTO(Integer id, String acao, Integer quantidade, BigDecimal totalVenda, BigDecimal valor,
-			BigDecimal lucroBruto, LocalDate dataVenda, Compra compra, String usuario) {
-		this.id = id;
-		this.acao = acao;
-		this.quantidade = quantidade;
-		this.totalVenda = totalVenda;
-		this.valorVenda = valor;
-		this.lucroBruto = lucroBruto;
-		this.dataVenda = dataVenda;
-		this.compra = compra;
-		this.usuario = usuario;
+	public VendaDTO(Venda venda) {
+		setId(venda.getId());
+		setAtivo(venda.getAtivo());
+		setQuantidade(venda.getQuantidade());
+		setValorBrutoVenda(venda.getValorBrutoVenda());
+		setValorAtivoVenda(venda.getValorAtivoVenda());
+		setDataVenda(venda.getDataVenda());
+		setMesCriacao(venda.getMesCriacao());
+		setMesAtualizacao(venda.getMesAtualizacao());
 	}
 
 	public Integer getId() {
@@ -52,6 +39,14 @@ public class VendaDTO {
 		this.id = id;
 	}
 
+	public Ativo getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Ativo ativo) {
+		this.ativo = ativo;
+	}
+
 	public Integer getQuantidade() {
 		return quantidade;
 	}
@@ -60,20 +55,20 @@ public class VendaDTO {
 		this.quantidade = quantidade;
 	}
 
-	public BigDecimal getTotalVenda() {
-		return totalVenda;
+	public BigDecimal getValorBrutoVenda() {
+		return valorBrutoVenda;
 	}
 
-	public void setTotalVenda(BigDecimal totalVenda) {
-		this.totalVenda = totalVenda;
+	public void setValorBrutoVenda(BigDecimal valorBrutoVenda) {
+		this.valorBrutoVenda = valorBrutoVenda;
 	}
 
-	public BigDecimal getValorVenda() {
-		return valorVenda;
+	public BigDecimal getValorAtivoVenda() {
+		return valorAtivoVenda;
 	}
 
-	public void setValorVenda(BigDecimal valorVenda) {
-		this.valorVenda = valorVenda;
+	public void setValorAtivoVenda(BigDecimal valorAtivoVenda) {
+		this.valorAtivoVenda = valorAtivoVenda;
 	}
 
 	public LocalDate getDataVenda() {
@@ -84,52 +79,20 @@ public class VendaDTO {
 		this.dataVenda = dataVenda;
 	}
 
-	public BigDecimal getLucroBruto() {
-		return lucroBruto;
+	public LocalDate getMesCriacao() {
+		return mesCriacao;
 	}
 
-	public void setLucroBruto(BigDecimal lucroBruto) {
-		this.lucroBruto = lucroBruto;
+	public void setMesCriacao(LocalDate mesCriacao) {
+		this.mesCriacao = mesCriacao;
 	}
 
-	public Investimento getInvestimento() {
-		return investimento;
+	public LocalDate getMesAtualizacao() {
+		return mesAtualizacao;
 	}
 
-	public void setInvestimento(Investimento investimento) {
-		this.investimento = investimento;
-	}
-
-	public String getAcao() {
-		return acao;
-	}
-
-	public void setAcao(String acao) {
-		this.acao = acao;
-	}
-
-	public Compra getCompra() {
-		return compra;
-	}
-
-	public void setCompra(Compra compra) {
-		this.compra = compra;
-	}
-
-	public Integer getIdInvestimento() {
-		return idInvestimento;
-	}
-
-	public void setIdInvestimento(Integer idInvestimento) {
-		this.idInvestimento = idInvestimento;
-	}
-
-	public String getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(String usuario) {
-		this.usuario = usuario;
+	public void setMesAtualizacao(LocalDate mesAtualizacao) {
+		this.mesAtualizacao = mesAtualizacao;
 	}
 
 }

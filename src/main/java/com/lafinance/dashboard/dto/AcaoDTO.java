@@ -1,57 +1,107 @@
 package com.lafinance.dashboard.dto;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 import com.lafinance.dashboard.model.Acao;
-import com.lafinance.dashboard.model.Usuario;
+import com.lafinance.dashboard.model.Ativo;
 
 public class AcaoDTO {
 
 	private Integer id;
-	private String nomeAcao;
-	private String ativoAcao;
-	private Usuario usuario;
+	private Ativo ativo;
+	private Integer quantidade;
+	private BigDecimal valorBrutoPago;
+	private BigDecimal valorAtivoPago;
+	private LocalDate dataCompra;
+	private LocalDate mesCriacao;
+	private LocalDate mesAtualizacao;
+	private String status;
 	
 	public AcaoDTO() {}
 	
 	public AcaoDTO(Acao acao) {
 		setId(acao.getId());
-		setNomeAcao(acao.getNomeAcao());
-		setAtivoAcao(acao.getAtivoAcao());
-		setUsuario(acao.getUsuario());
+		setAtivo(acao.getAtivo());
+		setQuantidade(acao.getQuantidade());
+		setValorBrutoPago(acao.getValorBrutoPago());
+		setValorAtivoPago(acao.getValorAtivoPago());
+		setDataCompra(acao.getDataCompra());
+		setMesCriacao(acao.getMesCriacao());
+		setMesAtualizacao(acao.getMesAtualizacao());
+		setStatus(acao.getStatus());
 	}
-	
-	public AcaoDTO(String acao) {
-		setNomeAcao(acao);
-	}
-	
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
-	public String getAtivoAcao() {
-		return ativoAcao;
-	}
-	public void setAtivoAcao(String ativoAcao) {
-		this.ativoAcao = ativoAcao;
+
+	public Ativo getAtivo() {
+		return ativo;
 	}
 
-	public Usuario getUsuario() {
-		return usuario;
+	public void setAtivo(Ativo ativo) {
+		this.ativo = ativo;
 	}
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
+	public Integer getQuantidade() {
+		return quantidade;
 	}
 
-	public String getNomeAcao() {
-		return nomeAcao;
+	public void setQuantidade(Integer quantidade) {
+		this.quantidade = quantidade;
 	}
 
-	public void setNomeAcao(String nomeAcao) {
-		this.nomeAcao = nomeAcao;
+	public BigDecimal getValorBrutoPago() {
+		return valorBrutoPago;
 	}
 
+	public void setValorBrutoPago(BigDecimal valorBrutoPago) {
+		this.valorBrutoPago = valorBrutoPago;
+	}
+
+	public BigDecimal getValorAtivoPago() {
+		return valorAtivoPago;
+	}
+
+	public void setValorAtivoPago(BigDecimal valorAtivoPago) {
+		this.valorAtivoPago = valorAtivoPago;
+	}
+
+	public LocalDate getMesCriacao() {
+		return mesCriacao;
+	}
+
+	public void setMesCriacao(LocalDate mesCriacao) {
+		this.mesCriacao = mesCriacao;
+	}
+
+	public LocalDate getMesAtualizacao() {
+		return mesAtualizacao;
+	}
+
+	public void setMesAtualizacao(LocalDate mesAtualizacao) {
+		this.mesAtualizacao = mesAtualizacao;
+	}
+
+	public LocalDate getDataCompra() {
+		return dataCompra;
+	}
+
+	public void setDataCompra(LocalDate dataCompra) {
+		this.dataCompra = dataCompra;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
 	
 }

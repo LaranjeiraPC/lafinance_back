@@ -7,18 +7,15 @@ import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.util.Response;
 
 public interface AcaoService {
-	
-	List<Acao> carregarAcoes(String usuario);
-	
-	List<AcaoDTO> carregarAcoesNome(String usuario);
-	
-	Response salvarAcao(Object[] acao);
-	
-	Response editarAcao(Object[] acao);
-	
-	Response excluirAcao(Object[] acao);
-	
-	Acao consultarAcaoPeloId(Integer id);
-	
-	Acao consultarAcaoNome(String nome);
+	Response salvarCompra(Object[] dados);
+	List<AcaoDTO> consultarAcoesPeloAnoMesSelecionado(String ano, String mes);
+	List<AcaoDTO> consultarAcoesAtivos(String mes);
+	List<String> consultarAno();
+	List<String> consultarMes(String ano);
+	AcaoDTO consultarAcaoVenda(String id);
+	List<AcaoDTO> consultarAcoesVenda(String id);
+	List<Acao> consultarAcoesIDs(List<Integer> ids);
+	void inativarAcoes(List<Acao> acoes);
+	List<AcaoDTO> consultarAcoesAtivo(String ativo);
+	List<Acao> findByStatus(String status);
 }
