@@ -9,4 +9,5 @@ public interface VendaService {
 	Response salvarVenda(Object[] dados);
 	List<VendaDTO> consultarVendasPeloAnoMesSelecionado(String ano, String mes);
 	VendaDTO consultarDetalhesVenda(String id);	
+	List<VendaDTO> consultarRelatorioVenda(String ano, String mes);
 }

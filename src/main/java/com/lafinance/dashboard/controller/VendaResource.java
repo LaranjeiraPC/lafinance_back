@@ -65,5 +65,19 @@ public class VendaResource {
 			return ResponseEntity.badRequest().build();
 		}
 	}
+	
+
+	@CrossOrigin
+	@GetMapping("/consulta/relatorio/{ano}/{mes}")
+	public ResponseEntity<List<VendaDTO>> consultarRelatorioVendas(
+			@PathVariable(name = "ano") String ano,
+			@PathVariable(name = "mes") String mes) {
+		log.debug("API - Consultar relatório vendas pelo ano e mês");
+		try {
+			return ResponseEntity.ok().body(vendaService.consultarRelatorioVenda(ano, mes));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
 
 }

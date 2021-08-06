@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.lafinance.dashboard.dto.CompraVendaDTO;
 import com.lafinance.dashboard.dto.VendaDTO;
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.model.Ativo;
@@ -102,6 +103,25 @@ public class VendaServiceImpl implements VendaService {
 	public VendaDTO consultarDetalhesVenda(String id) {
 		log.debug("Consultar detalhes da venda pelo id");
 		return new VendaDTO(repository.getOne(Integer.parseInt(id)));
+	}
+
+	@Override
+	public List<VendaDTO> consultarRelatorioVenda(String ano, String mes) {
+		log.debug("Montar relatorio vendas pelo ano e mês");
+		List<VendaDTO> dtoList = new ArrayList<>();
+		
+		List<Venda> vendas = repository.findByDataVenda(Integer.parseInt(ano),
+				Integer.parseInt(Util.converterNomeMesParaInteiro(mes)));
+		
+		vendas.forEach(v -> dtoList.add(new VendaDTO(v, consultarCompraVenda(v))));
+		return dtoList;
+	}
+	
+	public List<CompraVendaDTO> consultarCompraVenda(Venda entidade){
+		List<CompraVendaDTO> dtoList = new ArrayList<>();
+		List<CompraVenda> compraVendaList = compraVendaService.consultarCompraVendaPeloIdVenda(entidade.getId());
+		compraVendaList.forEach(c -> dtoList.add(new CompraVendaDTO(c)));
+		return dtoList;
 	}
 
 }
