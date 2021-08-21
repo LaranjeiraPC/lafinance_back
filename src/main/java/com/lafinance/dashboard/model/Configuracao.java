@@ -26,6 +26,12 @@ public class Configuracao implements Serializable{
 	@Column(name="valorbrutometa", nullable=true)
 	private BigDecimal valorBrutoMeta;
 	
+	@Column(name="ativoum", nullable=true)
+	private String ativoUm;
+	
+	@Column(name="ativodois", nullable=true)
+	private String ativoDois;
+	
 	public Configuracao() {}
 
 	public Integer getId() {
@@ -42,6 +48,22 @@ public class Configuracao implements Serializable{
 
 	public void setValorBrutoMeta(BigDecimal valorBrutoMeta) {
 		this.valorBrutoMeta = valorBrutoMeta;
+	}
+
+	public String getAtivoUm() {
+		return ativoUm;
+	}
+
+	public void setAtivoUm(String ativoUm) {
+		this.ativoUm = ativoUm;
+	}
+
+	public String getAtivoDois() {
+		return ativoDois;
+	}
+
+	public void setAtivoDois(String ativoDois) {
+		this.ativoDois = ativoDois;
 	}
 	
 

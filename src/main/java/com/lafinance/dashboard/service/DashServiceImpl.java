@@ -54,14 +54,18 @@ public class DashServiceImpl implements DashService {
 		dto.setValorBrutoTotal(brutoRecebido.subtract(brutoPago));
 		dto.setValorInvestimentoTotal(investimentoTotal);
 		dto.setQuantidadeTotal(quantidadeTotal);
-		dto.setValorBrutoMeta(configuracaoService.consultarValorBrutoMeta());
+		dto.setValorBrutoMeta(configuracaoService.consultarDadosConfiguracao().getValorBrutoMeta());
+		dto.setAtivoUm(configuracaoService.consultarDadosConfiguracao().getAtivoUm());
+		dto.setAtivoDois(configuracaoService.consultarDadosConfiguracao().getAtivoDois());
 
 		return dto;
 	}
 
 	private void consultarBrutoTotalMes(LocalDate data) {
-		List<VendaDTO> vendas = vendaService.consultarVendasPeloAnoMesSelecionado(String.valueOf(data.getYear()),
-				data.getMonth().toString());
+		brutoPago = new BigDecimal("0.00");
+		brutoRecebido = new BigDecimal("0.00");
+		List<VendaDTO> vendas = vendaService.consultarVendasPeloAnoMesSelecionadoInteiro(String.valueOf(data.getYear()),
+				String.valueOf(data.getMonthValue()));
 		vendas.forEach(v -> {
 			List<CompraVenda> compraVenda = compraVendaService.consultarCompraVendaPeloIdVenda(v.getId());
 			compraVenda.forEach(c -> {

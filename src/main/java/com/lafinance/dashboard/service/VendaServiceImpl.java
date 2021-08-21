@@ -124,4 +124,13 @@ public class VendaServiceImpl implements VendaService {
 		return dtoList;
 	}
 
+	@Override
+	public List<VendaDTO> consultarVendasPeloAnoMesSelecionadoInteiro(String ano, String mes) {
+		log.debug("Consultar vendas pelo ano e mês");
+		List<VendaDTO> dtoList = new ArrayList<>();
+		repository.findByDataVenda(Integer.parseInt(ano),
+				Integer.parseInt(Util.ajustarNumeroMes(mes))).forEach(a -> dtoList.add(new VendaDTO(a)));
+		return dtoList;
+	}
+
 }

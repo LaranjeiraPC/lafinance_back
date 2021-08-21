@@ -10,4 +10,5 @@ public interface VendaService {
 	List<VendaDTO> consultarVendasPeloAnoMesSelecionado(String ano, String mes);
 	VendaDTO consultarDetalhesVenda(String id);	
 	List<VendaDTO> consultarRelatorioVenda(String ano, String mes);
+	List<VendaDTO> consultarVendasPeloAnoMesSelecionadoInteiro(String ano, String mes);
 }

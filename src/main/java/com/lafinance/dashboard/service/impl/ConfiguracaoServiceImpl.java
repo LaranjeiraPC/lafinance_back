@@ -41,7 +41,15 @@ public class ConfiguracaoServiceImpl implements ConfiguracaoService{
 	@Override
 	public Response salvarConfiguracao(Object[] dados) {
 		Response response = new Response();
-		BigDecimal valorBrutoMeta = new BigDecimal((String) dados[0]);
+		BigDecimal valorBrutoMeta;	
+		Configuracao configuracao = new Configuracao();
+		
+		String valorBrutoTemp = (String) dados[0];
+		if(!valorBrutoTemp.equals("")) {
+			valorBrutoMeta = new BigDecimal((String) dados[0]);	
+		}else {
+			valorBrutoMeta = new BigDecimal("0.00");	
+		}
 		
 		try {
 			log.debug("Preparando entidade Configuracao");
@@ -49,11 +57,14 @@ public class ConfiguracaoServiceImpl implements ConfiguracaoService{
 			List<Configuracao> configList = configuracaoRepository.findAll();
 			
 			if(configList.isEmpty()) {
-				Configuracao configuracao = new Configuracao();
 				configuracao.setValorBrutoMeta(valorBrutoMeta);
+				configuracao.setAtivoUm((((String) dados[1]).equals(""))?"":(String) dados[2]);
+				configuracao.setAtivoDois((((String) dados[2]).equals(""))?"":(String) dados[2]);
 				configuracaoRepository.save(configuracao);
 			}else {
 				configList.get(0).setValorBrutoMeta(valorBrutoMeta);
+				configList.get(0).setAtivoUm((((String) dados[1]).equals(""))?"":(String) dados[1]);
+				configList.get(0).setAtivoDois((((String) dados[2]).equals(""))?"":(String) dados[2]);
 				configuracaoRepository.saveAll(configList);
 			}
 
@@ -67,16 +78,5 @@ public class ConfiguracaoServiceImpl implements ConfiguracaoService{
 			return response;
 		}
 	}
-
-	@Override
-	public BigDecimal consultarValorBrutoMeta() {
-		log.debug("Consultando valor bruto meta");
-		List<Configuracao> config = configuracaoRepository.findAll();
-		if(!config.isEmpty()) {
-			return config.get(0).getValorBrutoMeta();
-		}else {
-			return new BigDecimal("0.00");			
-		}
-	};
 
 }

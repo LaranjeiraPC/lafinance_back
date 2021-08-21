@@ -8,12 +8,16 @@ public class ConfiguracaoDTO {
 	
 	private Integer id;
 	private BigDecimal valorBrutoMeta;
+	private String ativoUm;
+	private String ativoDois;
 	
 	public ConfiguracaoDTO() {}
 	
 	public ConfiguracaoDTO(Configuracao config) {
 		setId(config.getId());
 		setValorBrutoMeta(config.getValorBrutoMeta());
+		setAtivoUm(config.getAtivoUm());
+		setAtivoDois(config.getAtivoDois());
 	}
 	
 	public Integer getId() {
@@ -27,6 +31,22 @@ public class ConfiguracaoDTO {
 	}
 	public void setValorBrutoMeta(BigDecimal valorBrutoMeta) {
 		this.valorBrutoMeta = valorBrutoMeta;
+	}
+
+	public String getAtivoUm() {
+		return ativoUm;
+	}
+
+	public void setAtivoUm(String ativoUm) {
+		this.ativoUm = ativoUm;
+	}
+
+	public String getAtivoDois() {
+		return ativoDois;
+	}
+
+	public void setAtivoDois(String ativoDois) {
+		this.ativoDois = ativoDois;
 	}
 
 }
