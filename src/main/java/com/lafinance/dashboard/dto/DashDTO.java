@@ -8,6 +8,8 @@ public class DashDTO {
 	private BigDecimal valorBrutoTotal;
 	private BigDecimal valorInvestimentoTotal;
 	private BigDecimal valorBrutoMeta;
+	private String ativoUm;
+	private String ativoDois;
 	
 	public DashDTO () {}
 	
@@ -36,6 +38,22 @@ public class DashDTO {
 
 	public void setValorBrutoMeta(BigDecimal valorBrutoMeta) {
 		this.valorBrutoMeta = valorBrutoMeta;
+	}
+
+	public String getAtivoUm() {
+		return ativoUm;
+	}
+
+	public void setAtivoUm(String ativoUm) {
+		this.ativoUm = ativoUm;
+	}
+
+	public String getAtivoDois() {
+		return ativoDois;
+	}
+
+	public void setAtivoDois(String ativoDois) {
+		this.ativoDois = ativoDois;
 	}
 
 }

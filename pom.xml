@@ -15,7 +15,7 @@
 	<artifactId>lafinance</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Lafinance</name>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<description>API Controle de compra e venda de acoes</description>
 	<properties>
 		<java.version>1.8</java.version>
@@ -71,23 +71,6 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>com.microsoft.azure</groupId>
-				<artifactId>azure-webapp-maven-plugin</artifactId>
-				<version>1.7.0</version>
-				<configuration>
-					<schemaVersion>V2</schemaVersion>
-					<resourceGroup>lafinance</resourceGroup>
-					<appName>lafinance</appName>
-					<pricingTier>B1</pricingTier>
-					<region>centralus</region>
-					<runtime>
-						<os>windows</os>
-						<javaVersion>1.8</javaVersion>
-						<webContainer>tomcat 8.5</webContainer>
-					</runtime>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
