@@ -2,20 +2,17 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
+import com.lafinance.dashboard.model.Ativo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lafinance.dashboard.dto.AtivoDTO;
 import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.util.Response;
+
+import javax.validation.Valid;
 
 @CrossOrigin
 @RestController
@@ -29,13 +26,10 @@ public class AtivoResource {
 	public AtivoResource(AtivoService ativoService) {
 		this.ativoService = ativoService;
 	}
-	
+
 	@CrossOrigin
-	@PostMapping("/salvar/")
-	public ResponseEntity<Response> salvarAtivo(@RequestBody Object[] ativo) {
-
-		log.debug("API - Armazenar Ativo");
-
+	@PostMapping("/salva/")
+	public ResponseEntity<Response> cadastrarAtivo(@RequestBody Ativo ativo) {
 		try {
 			return ResponseEntity.ok().body(ativoService.salvarAtivo(ativo));
 		} catch (Exception e) {
@@ -45,10 +39,7 @@ public class AtivoResource {
 	
 	@CrossOrigin
 	@PostMapping("/editar/")
-	public ResponseEntity<Response> editarAtivo(@RequestBody Object[] ativo) {
-
-		log.debug("API - editar Ativo");
-
+	public ResponseEntity<Response> editarAtivo(@RequestBody Ativo ativo) {
 		try {
 			return ResponseEntity.ok().body(ativoService.editarAtivo(ativo));
 		} catch (Exception e) {
@@ -58,7 +49,7 @@ public class AtivoResource {
 	
 	@CrossOrigin
 	@GetMapping("/excluir/{id}")
-	public ResponseEntity<Response> excluirAtivo(@PathVariable(name = "id") String id) {
+	public ResponseEntity<Response> excluirAtivo(@PathVariable(name = "id") Integer id) {
 
 		log.debug("API - excluir Ativo");
 

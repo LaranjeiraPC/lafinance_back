@@ -59,7 +59,7 @@ public class VendaServiceImpl implements VendaService {
 			acoesIds.forEach(a -> acoesIdsInteger.add(Integer.parseInt(a)));
 
 			Ativo ativo = ativoService.consultarNomeAtivo((String) dados[1]);
-			List<Acao> acoes = acaoService.consultarAcoesIDs(acoesIdsInteger);
+			List<Acao> acoes = acaoService.consultarAcoesId(acoesIdsInteger);
 			acaoService.inativarAcoes(acoes);
 			
 			venda.setAtivo(ativo);

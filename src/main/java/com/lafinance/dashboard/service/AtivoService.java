@@ -7,9 +7,9 @@ import com.lafinance.dashboard.model.Ativo;
 import com.lafinance.dashboard.util.Response;
 
 public interface AtivoService {
-	Response salvarAtivo(Object[] dados);
-	Response editarAtivo(Object[] dados);
-	Response excluirAtivo(String id);
+	Response salvarAtivo(Ativo ativo);
+	Response editarAtivo(Ativo ativo);
+	Response excluirAtivo(Integer id);
 	Ativo consultarNomeAtivo(String nome);
 	List<AtivoDTO> consultarAtivo();
 }

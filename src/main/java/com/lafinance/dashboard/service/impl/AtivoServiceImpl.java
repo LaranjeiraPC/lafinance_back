@@ -34,55 +34,45 @@ public class AtivoServiceImpl implements AtivoService{
 	}
 
 	@Override
-	public Response salvarAtivo(Object[] dados) {
+	public Response salvarAtivo(Ativo ativo) {
 		Response response = new Response();
 		try {
-			log.debug("Preparando entidade Ativo");
-			
-			String tempNome = (String) dados[0];
-			tempNome = tempNome.toUpperCase();
-			
-			Ativo ativoTemp = ativoRepository.findByNome(tempNome);
-			
-			if(ativoTemp != null) {
-				log.debug("Entidade Ativo já cadastrado");
+			Ativo ativoCheck = ativoRepository.findByNome(ativo.getNome());
+
+			if(ativoCheck != null){
 				response.setTipo(TipoResponse.ERRO);
-			}else {
-				Ativo ativo = new Ativo();
-				ativo.setNome(tempNome);
-				ativo.setStatus("S");
-				
-				ativoRepository.save(ativo);
-				
-				log.debug("Entidade Ativo armazenado");
-				response.setTipo(TipoResponse.SUCESSO);
+				response.setMensagem("Entidade Ativo já cadastrado");
+				return response;
 			}
-			
+
+			ativo.setId(null);
+			ativo.setStatus("S");
+			ativoRepository.save(ativo);
+
+			response.setTipo(TipoResponse.SUCESSO);
+			response.setMensagem("Entidade Ativo armazenado");
 			return response;
 		}catch(Exception e) {
-			log.debug("Erro ao armazenar entidade Ativo");
 			response.setTipo(TipoResponse.ERRO);
-			response.setMensagem("Erro ao salvar registro!");
+			response.setMensagem("Erro ao armazenar entidade Ativo");
 			return response;
 		}
 	}
 
 	@Override
-	public Response editarAtivo(Object[] dados) {
+	public Response editarAtivo(Ativo ativo) {
 		Response response = new Response();
 		try {
-			log.debug("Preparando edição entidade Ativo");
-			Ativo ativo = ativoRepository.findByNome((String) dados[0]);
-			ativo.setNome((String) dados[1]);
-			ativo.setStatus((String) dados[2]);
+			Ativo ativoUpdate = ativoRepository.findByNome(ativo.getNome());
+			ativoUpdate.setNome(ativo.getNome());
+			ativoUpdate.setStatus(ativo.getStatus());
 			
-			ativoRepository.save(ativo);
-			
-			log.debug("Entidade Ativo editado");
+			ativoRepository.save(ativoUpdate);
+
 			response.setTipo(TipoResponse.SUCESSO);
+			response.setMensagem("Entidade Ativo editado");
 			return response;
 		}catch(Exception e) {
-			log.debug("Erro ao editar entidade Ativo");
 			response.setTipo(TipoResponse.ERRO);
 			response.setMensagem("Erro ao editar registro!");
 			return response;
@@ -90,18 +80,16 @@ public class AtivoServiceImpl implements AtivoService{
 	}
 
 	@Override
-	public Response excluirAtivo(String id) {
+	public Response excluirAtivo(Integer id) {
 		Response response = new Response();
 		try {
-			log.debug("Preparando exclusão entidade Ativo");
-			Ativo ativo = ativoRepository.getOne(Integer.parseInt(id));
+			Ativo ativo = ativoRepository.getOne(id);
 			ativoRepository.delete(ativo);
-			
-			log.debug("Entidade Ativo excluido");
+
+			response.setMensagem("Entidade Ativo excluido");
 			response.setTipo(TipoResponse.SUCESSO);
 			return response;
 		}catch(Exception e) {
-			log.debug("Erro ao excluir entidade Ativo");
 			response.setTipo(TipoResponse.ERRO);
 			response.setMensagem("Erro ao excluir registro!");
 			return response;
