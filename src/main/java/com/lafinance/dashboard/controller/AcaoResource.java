@@ -2,126 +2,73 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
+import com.lafinance.dashboard.model.Acao;
+import com.lafinance.dashboard.model.Ativo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lafinance.dashboard.dto.AcaoDTO;
 import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.util.Response;
+
+import javax.ws.rs.DELETE;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/api/acao")
 public class AcaoResource {
 
-	private final Logger log = LoggerFactory.getLogger(AcaoResource.class);
+    private final Logger log = LoggerFactory.getLogger(AcaoResource.class);
 
-	private final AcaoService acaoService;
+    private final AcaoService acaoService;
 
-	public AcaoResource(AcaoService acaoService) {
-		this.acaoService = acaoService;
-	}
+    public AcaoResource(AcaoService acaoService) {
+        this.acaoService = acaoService;
+    }
 
-	@CrossOrigin
-	@PostMapping("/compra/")
-	public ResponseEntity<Response> salvarCompra(@RequestBody Object[] acao) {
+    @CrossOrigin
+    @GetMapping("/consulta/acoes/")
+    public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivos() {
+        try {
+            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivos());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
-		log.debug("API - Armazenar compra");
+    @CrossOrigin
+    @PostMapping("/salva/")
+    public ResponseEntity<Response> cadastrarAcao(@RequestBody Acao acao) {
+        try {
+            return ResponseEntity.ok().body(acaoService.cadastrarAcao(acao));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
-		try {
-			return ResponseEntity.ok().body(acaoService.salvarCompra(acao));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
+    @CrossOrigin
+    @PostMapping("/edita/")
+    public ResponseEntity<Response> editarAcao(@RequestBody AcaoDTO acao) {
+        try {
+            return ResponseEntity.ok().body(acaoService.editarAcao(acao));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
-	@CrossOrigin
-	@GetMapping("/consulta/ano/mes/{ano}/{mes}")
-	public ResponseEntity<List<AcaoDTO>> consultarAcoesPeloMesSelecionado(@PathVariable(name = "ano") String ano,
-			@PathVariable(name = "mes") String mes) {
-		log.debug("API - Consultar ações pelo ano e mês");
-		try {
-			return ResponseEntity.ok().body(acaoService.consultarAcoesPeloAnoMesSelecionado(ano, mes));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/acoes/{mes}")
-	public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivos(@PathVariable(name = "mes") String mes) {
-		log.debug("API - Consultar ações dos meses anteriores ativos");
-		try {
-			return ResponseEntity.ok().body(acaoService.consultarAcoesAtivos(mes));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/ano/")
-	public ResponseEntity<List<String>> consultarAno() {
-		log.debug("API - Consultar ano");
-		try {
-			return ResponseEntity.ok().body(acaoService.consultarAno());
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/mes/{ano}")
-	public ResponseEntity<List<String>> consultarMes(@PathVariable(name = "ano") String ano) {
-		log.debug("API - Consultar mes");
-		try {
-			return ResponseEntity.ok().body(acaoService.consultarMes(ano));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/id/{id}")
-	public ResponseEntity<AcaoDTO> consultarAcaoVenda(
-			@PathVariable(name = "id") String id) {
-		log.debug("API - Consultar Entidade Acao venda");
-		try {
-			return ResponseEntity.ok().body(acaoService.consultarAcaoVenda(id));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/acoes/id/{id}")
-	public ResponseEntity<List<AcaoDTO>> consultarAcoesVenda(
-			@PathVariable(name = "id") String id) {
-		log.debug("API - Consultar Endidades Ações venda");
-		try {
-			return ResponseEntity.ok().body(acaoService.consultarAcoesVenda(id));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/acoes/ativo/{ativo}")
-	public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivo(
-			@PathVariable(name = "ativo") String ativo) {
-		log.debug("API - Consultar Entidades Ações pelo ativo");
-		try {
-			return ResponseEntity.ok().body(acaoService.consultarAcoesAtivo(ativo));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
+    @CrossOrigin
+    @DeleteMapping("/excluir/{id}")
+    public ResponseEntity<Response> excluirAcao(@PathVariable(name = "id") Integer id) {
+
+        log.debug("API - excluir Acao");
+
+        try {
+            return ResponseEntity.ok().body(acaoService.excluirAcao(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 }

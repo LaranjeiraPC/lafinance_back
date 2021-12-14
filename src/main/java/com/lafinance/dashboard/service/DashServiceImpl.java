@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.lafinance.dashboard.dto.AcaoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -76,7 +77,7 @@ public class DashServiceImpl implements DashService {
 	}
 
 	private void consultarInvestimentoTotal() {
-		List<Acao> acoes = acaoService.findByStatus("S");
+		List<AcaoDTO> acoes = acaoService.consultarAcoesAtivos();
 		if (!acoes.isEmpty()) {
 			acoes.forEach(a -> {
 				investimentoTotal = investimentoTotal.add(a.getValorBrutoPago());
