@@ -1,7 +1,6 @@
 package com.lafinance.dashboard.service.impl;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.dto.CompraVendaDTO;
 import com.lafinance.dashboard.dto.VendaDTO;
-import com.lafinance.dashboard.model.Acao;
-import com.lafinance.dashboard.model.Ativo;
-import com.lafinance.dashboard.model.CompraVenda;
 import com.lafinance.dashboard.model.Venda;
 import com.lafinance.dashboard.repository.VendaRepository;
 import com.lafinance.dashboard.util.Response;
@@ -100,25 +95,6 @@ public class VendaServiceImpl implements VendaService {
 		List<VendaDTO> dtoList = new ArrayList<>();
 		repository.findByDataVenda(Integer.parseInt(ano),
 				Integer.parseInt(Util.converterNomeMesParaInteiro(mes))).forEach(a -> dtoList.add(new VendaDTO(a)));
-		return dtoList;
-	}
-
-//	@Override
-//	public List<VendaDTO> consultarRelatorioVenda(String ano, String mes) {
-//		log.debug("Montar relatorio vendas pelo ano e mês");
-//		List<VendaDTO> dtoList = new ArrayList<>();
-//
-//		List<Venda> vendas = repository.findByDataVenda(Integer.parseInt(ano),
-//				Integer.parseInt(Util.converterNomeMesParaInteiro(mes)));
-//
-//		//vendas.forEach(v -> dtoList.add(new VendaDTO(v, consultarCompraVenda(v))));
-//		return dtoList;
-//	}
-	
-	public List<CompraVendaDTO> consultarCompraVenda(Venda entidade){
-		List<CompraVendaDTO> dtoList = new ArrayList<>();
-		List<CompraVenda> compraVendaList = compraVendaService.consultarCompraVendaPeloIdVenda(entidade.getId());
-		compraVendaList.forEach(c -> dtoList.add(new CompraVendaDTO(c)));
 		return dtoList;
 	}
 
