@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.repository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,4 +28,8 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
 
 	@Query("SELECT a FROM Acao a where a.id = :id")
 	List<Acao> consultarAcoesId(@Param("id") List<Integer> id);
+
+	@Query("SELECT SUM(a.valorBrutoPago) FROM Acao a where a.id = :idsCompra")
+	BigDecimal calcularValorBrutoPago(List<Integer> idsCompra);
+
 }

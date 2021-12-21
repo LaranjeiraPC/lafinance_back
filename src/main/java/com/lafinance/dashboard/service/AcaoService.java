@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.lafinance.dashboard.dto.AcaoDTO;
@@ -14,7 +15,8 @@ public interface AcaoService {
 	Response editarAcao(AcaoDTO acao);
 
 	void inativarAcoes(List<Acao> acoes);
+	void ativarAcoes(List<Acao> acoes);
 	List<Acao> consultarAcoesId(List<Integer> id);
-
+	BigDecimal calcularLucroBruto(List<Integer> idsCompra);
 
 }

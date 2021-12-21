@@ -17,7 +17,7 @@ public class VendaDTO {
 	private LocalDate dataVenda;
 	private LocalDate mesCriacao;
 	private LocalDate mesAtualizacao;
-	private List<CompraVendaDTO> compraVendaDTO;
+	private List<AcaoDTO> acaoDTO;
 
 	public VendaDTO() {
 	}
@@ -31,10 +31,10 @@ public class VendaDTO {
 		setDataVenda(venda.getDataVenda());
 		setMesCriacao(venda.getMesCriacao());
 		setMesAtualizacao(venda.getMesAtualizacao());
-		setCompraVendaDTO(compraVendaDTO);
+		setAcaoDTO(acaoDTO);
 	}
 	
-	public VendaDTO(Venda venda, List<CompraVendaDTO> compraVendaDTO) {
+	public VendaDTO(Venda venda, List<AcaoDTO> compraVendaDTO) {
 		setId(venda.getId());
 		setAtivo(venda.getAtivo());
 		setQuantidade(venda.getQuantidade());
@@ -43,7 +43,7 @@ public class VendaDTO {
 		setDataVenda(venda.getDataVenda());
 		setMesCriacao(venda.getMesCriacao());
 		setMesAtualizacao(venda.getMesAtualizacao());
-		setCompraVendaDTO(compraVendaDTO);
+		setAcaoDTO(compraVendaDTO);
 	}
 
 	public Integer getId() {
@@ -110,12 +110,11 @@ public class VendaDTO {
 		this.mesAtualizacao = mesAtualizacao;
 	}
 
-	public List<CompraVendaDTO> getCompraVendaDTO() {
-		return compraVendaDTO;
+	public List<AcaoDTO> getAcaoDTO() {
+		return acaoDTO;
 	}
 
-	public void setCompraVendaDTO(List<CompraVendaDTO> compraVendaDTO) {
-		this.compraVendaDTO = compraVendaDTO;
+	public void setAcaoDTO(List<AcaoDTO> acaoDTO) {
+		this.acaoDTO = acaoDTO;
 	}
-
 }
