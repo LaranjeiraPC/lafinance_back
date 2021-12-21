@@ -2,16 +2,11 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
+import com.lafinance.dashboard.model.Venda;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.lafinance.dashboard.dto.VendaDTO;
 import com.lafinance.dashboard.service.VendaService;
@@ -32,12 +27,12 @@ public class VendaResource {
 
 	@CrossOrigin
 	@PostMapping("/venda/")
-	public ResponseEntity<Response> salvarVenda(@RequestBody Object[] acao) {
+	public ResponseEntity<Response> salvarVenda(@RequestBody Venda venda) {
 
 		log.debug("API - Armazenar venda");
 
 		try {
-			return ResponseEntity.ok().body(vendaService.salvarVenda(acao));
+			return ResponseEntity.ok().body(vendaService.cadastrar(venda));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -54,27 +49,13 @@ public class VendaResource {
 			return ResponseEntity.badRequest().build();
 		}
 	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/detalhes/{id}")
-	public ResponseEntity<VendaDTO> consultarDetalhesVenda(@PathVariable(name = "id") String id) {
-		log.debug("API - Consultar vendas pelo id");
-		try {
-			return ResponseEntity.ok().body(vendaService.consultarDetalhesVenda(id));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
 
 	@CrossOrigin
-	@GetMapping("/consulta/relatorio/{ano}/{mes}")
-	public ResponseEntity<List<VendaDTO>> consultarRelatorioVendas(
-			@PathVariable(name = "ano") String ano,
-			@PathVariable(name = "mes") String mes) {
-		log.debug("API - Consultar relatório vendas pelo ano e mês");
+	@DeleteMapping("/excluir/{id}")
+	public ResponseEntity<Response> excluirVenda(@PathVariable(name = "id") Integer id) {
+		log.debug("API - excluir Venda");
 		try {
-			return ResponseEntity.ok().body(vendaService.consultarRelatorioVenda(ano, mes));
+			return ResponseEntity.ok().body(vendaService.excluir(id));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}

@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,13 +80,27 @@ public class AcaoServiceImpl implements AcaoService {
         acoes.forEach(a -> {
             Acao acao = this.repository.getOne(a.getId());
             acao.setStatus("N");
-            this.repository.save(acao);
         });
+        this.repository.saveAll(acoes);
+    }
+
+    @Override
+    public void ativarAcoes(List<Acao> acoes) {
+        acoes.forEach(a -> {
+            Acao acao = this.repository.getOne(a.getId());
+            acao.setStatus("S");
+        });
+        this.repository.saveAll(acoes);
     }
 
     @Override
     public List<Acao> consultarAcoesId(List<Integer> id) {
         return this.repository.consultarAcoesId(id);
+    }
+
+    @Override
+    public BigDecimal calcularLucroBruto(List<Integer> idsCompra) {
+        return this.repository.calcularValorBrutoPago(idsCompra);
     }
 
     @Override
