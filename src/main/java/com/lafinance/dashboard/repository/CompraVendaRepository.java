@@ -14,8 +14,4 @@ import com.lafinance.dashboard.model.CompraVenda;
 public interface CompraVendaRepository extends JpaRepository<CompraVenda, Integer> {
 	List<CompraVenda> findByVendaId(Integer id);
 	List<CompraVenda> findByCompraId(Integer id);
-
-//	@EntityGraph(attributePaths = "employeeGroups")
-	@Query("SELECT c.compra FROM CompraVenda c where c.venda.id = :id")
-	List<Acao> findByVenda(Integer id);
 }

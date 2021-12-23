@@ -13,8 +13,10 @@ public interface AcaoService {
 	Response cadastrarAcao(Acao acao);
 	Response excluirAcao(Integer id);
 	Response editarAcao(AcaoDTO acao);
+	List<AcaoDTO> consultarAcoesAtivosVenda(String nome);
+	List<Acao> consultarAcoesPeloIdVenda(Integer idVenda);
 
-	void inativarAcoes(List<Acao> acoes);
+	Response inativarAcoes(List<Acao> acoes);
 	void ativarAcoes(List<Acao> acoes);
 	List<Acao> consultarAcoesId(List<Integer> id);
 	BigDecimal calcularLucroBruto(List<Integer> idsCompra);

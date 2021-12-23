@@ -52,7 +52,7 @@ public class CompraVendaServiceImpl implements CompraVendaService{
 			log.trace("ID {}", id);
 			log.debug("Removendo registros de compra e venda pelo id {}", id);
 
-			List<Acao> acaoList = this.repository.findByVenda(id);
+			List<Acao> acaoList = this.acaoService.consultarAcoesPeloIdVenda(id);
 			log.trace("Quantidade de ações habilitadas: {}", acaoList);
 			this.acaoService.ativarAcoes(acaoList);
 

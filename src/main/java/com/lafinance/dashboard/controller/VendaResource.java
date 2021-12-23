@@ -28,9 +28,7 @@ public class VendaResource {
 	@CrossOrigin
 	@PostMapping("/venda/")
 	public ResponseEntity<Response> salvarVenda(@RequestBody Venda venda) {
-
 		log.debug("API - Armazenar venda");
-
 		try {
 			return ResponseEntity.ok().body(vendaService.cadastrar(venda));
 		} catch (Exception e) {
@@ -56,6 +54,18 @@ public class VendaResource {
 		log.debug("API - excluir Venda");
 		try {
 			return ResponseEntity.ok().body(vendaService.excluir(id));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().build();
+		}
+	}
+
+	@CrossOrigin
+	@PostMapping("/edita/")
+	public ResponseEntity<Response> editarVenda(
+			@RequestBody Venda venda) {
+		log.debug("API - editar Venda");
+		try {
+			return ResponseEntity.ok().body(vendaService.editar(venda));
 		} catch (Exception e) {
 			return ResponseEntity.badRequest().build();
 		}
