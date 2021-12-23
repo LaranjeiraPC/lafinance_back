@@ -2,6 +2,7 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
+import com.lafinance.dashboard.dto.VendaDTO;
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.model.Ativo;
 import org.slf4j.Logger;
@@ -61,14 +62,35 @@ public class AcaoResource {
     @CrossOrigin
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<Response> excluirAcao(@PathVariable(name = "id") Integer id) {
-
         log.debug("API - excluir Acao");
-
         try {
-            return ResponseEntity.ok().body(acaoService.excluirAcao(id));
+            acaoService.excluirAcao(id);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @CrossOrigin
+    @GetMapping("/consulta/acoes/venda/{nome}")
+    public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivosVenda(@PathVariable(name = "nome") String nome) {
+        log.debug("API - Consultar Ações para tela de venda");
+        try {
+            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosVenda(nome));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping("/inativar/")
+    public ResponseEntity<Response> inativarAcoes(@RequestBody List<Acao> acao) {
+        try {
+            return ResponseEntity.ok().body(acaoService.inativarAcoes(acao));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 
 }

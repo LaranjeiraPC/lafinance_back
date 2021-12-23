@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lafinance.dashboard.service.CompraVendaService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -76,12 +77,21 @@ public class AcaoServiceImpl implements AcaoService {
     }
 
     @Override
-    public void inativarAcoes(List<Acao> acoes) {
-        acoes.forEach(a -> {
-            Acao acao = this.repository.getOne(a.getId());
-            acao.setStatus("N");
-        });
-        this.repository.saveAll(acoes);
+    public Response inativarAcoes(List<Acao> acoes) {
+        try{
+            Response response = new Response();
+            acoes.forEach(a -> {
+                a.setStatus("N");
+            });
+            this.repository.saveAll(acoes);
+            response.setMensagem("Registro salvo com sucesso");
+            response.setTipo(TipoResponse.SUCESSO);
+            response.setDtos(acoes);
+            return response;
+        }catch (Exception e){
+            log.warn("Erro ao inativar registros");
+            throw e;
+        }
     }
 
     @Override
@@ -115,6 +125,18 @@ public class AcaoServiceImpl implements AcaoService {
             response.setTipo(TipoResponse.ERRO);
         }
         return response;
+    }
+
+    @Override
+    public List<AcaoDTO> consultarAcoesAtivosVenda(String nome) {
+        List<AcaoDTO> dtos = new ArrayList<>();
+        this.repository.findByAtivoNome(nome).forEach(a -> dtos.add(new AcaoDTO(a)));
+        return dtos;
+    }
+
+    @Override
+    public List<Acao> consultarAcoesPeloIdVenda(Integer idVenda) {
+        return this.repository.findByVenda(idVenda);
     }
 
 }

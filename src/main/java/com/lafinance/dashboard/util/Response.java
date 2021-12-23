@@ -1,9 +1,12 @@
 package com.lafinance.dashboard.util;
 
-public class Response {
+import java.util.List;
+
+public class Response<K> {
 	
 	private String mensagem;
 	private TipoResponse tipo;
+	private List<K> dtos;
 
 	public enum TipoResponse {
 		SUCESSO, ERRO, ATUALIZACAO, VISUALIZACAO
@@ -24,5 +27,12 @@ public class Response {
 	public void setTipo(TipoResponse tipo) {
 		this.tipo = tipo;
 	}
-	
+
+	public List<K> getDtos() {
+		return dtos;
+	}
+
+	public void setDtos(List<K> dtos) {
+		this.dtos = dtos;
+	}
 }

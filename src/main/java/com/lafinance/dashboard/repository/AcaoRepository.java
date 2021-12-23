@@ -32,4 +32,10 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
 	@Query("SELECT SUM(a.valorBrutoPago) FROM Acao a where a.id = :idsCompra")
 	BigDecimal calcularValorBrutoPago(List<Integer> idsCompra);
 
+	@Query("SELECT c.compra FROM CompraVenda c where c.venda.id = :id")
+	List<Acao> findByVenda(Integer id);
+
+	List<Acao> findByAtivoNome(String nome);
+
+
 }

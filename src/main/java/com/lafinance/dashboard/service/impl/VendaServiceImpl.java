@@ -14,11 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.dto.CompraVendaDTO;
 import com.lafinance.dashboard.dto.VendaDTO;
-import com.lafinance.dashboard.model.Acao;
-import com.lafinance.dashboard.model.Ativo;
-import com.lafinance.dashboard.model.CompraVenda;
 import com.lafinance.dashboard.model.Venda;
 import com.lafinance.dashboard.repository.VendaRepository;
 import com.lafinance.dashboard.util.Response;
@@ -46,80 +42,18 @@ public class VendaServiceImpl implements VendaService {
 		this.compraVendaService = compraVenda;
 	}
 
-//	@Override
-//	public Response salvarVenda(Object[] dados) {
-//		Response response = new Response();
-//		BigDecimal valorBrutoVenda = new BigDecimal((String) dados[3]);
-//		BigDecimal valorAtivoVenda = new BigDecimal((String) dados[4]);
-//
-//		try {
-//			venda = new Venda();
-//			log.debug("Preparando entidade Venda");
-//
-//			List<CompraVenda> compraVendaList = new ArrayList<>();
-//
-//			List<String> acoesIds = (List<String>) dados[0];
-//			List<Integer> acoesIdsInteger = new ArrayList<>();
-//			acoesIds.forEach(a -> acoesIdsInteger.add(Integer.parseInt(a)));
-//
-//			Ativo ativo = ativoService.consultarNomeAtivo((String) dados[1]);
-//			List<Acao> acoes = acaoService.consultarAcoesId(acoesIdsInteger);
-//			acaoService.inativarAcoes(acoes);
-//
-//			venda.setAtivo(ativo);
-//			venda.setQuantidade(Integer.parseInt((String) dados[2]));
-//			venda.setValorAtivoVenda(valorAtivoVenda);
-//			venda.setValorBrutoVenda(valorBrutoVenda);
-//			venda.setDataVenda(Util.montarData((String) dados[5]));
-//			venda.setMesCriacao(LocalDate.now());
-//
-//			venda = repository.save(venda);
-//
-//			acoes.forEach(a -> {
-//				CompraVenda compraVenda = new CompraVenda();
-//				compraVenda.setVenda(venda);
-//				compraVenda.setCompra(a);
-//				compraVendaList.add(compraVenda);
-//			});
-//			compraVendaService.salvarRegistro(compraVendaList);
-//
-//			log.debug("Entidade Venda aramazenado");
-//			response.setTipo(TipoResponse.SUCESSO);
-//			return response;
-//		} catch (Exception e) {
-//			log.debug("Erro ao armazenar entidade Venda");
-//			response.setTipo(TipoResponse.ERRO);
-//			response.setMensagem("Erro ao salvar registro!");
-//			return response;
-//		}
-//	}
-
 	@Override
 	public List<VendaDTO> consultarVendasPeloAnoMesSelecionado(String ano, String mes) {
-		log.debug("Consultar vendas pelo ano e mês");
-		List<VendaDTO> dtoList = new ArrayList<>();
-		repository.findByDataVenda(Integer.parseInt(ano),
-				Integer.parseInt(Util.converterNomeMesParaInteiro(mes))).forEach(a -> dtoList.add(new VendaDTO(a)));
-		return dtoList;
-	}
-
-//	@Override
-//	public List<VendaDTO> consultarRelatorioVenda(String ano, String mes) {
-//		log.debug("Montar relatorio vendas pelo ano e mês");
-//		List<VendaDTO> dtoList = new ArrayList<>();
-//
-//		List<Venda> vendas = repository.findByDataVenda(Integer.parseInt(ano),
-//				Integer.parseInt(Util.converterNomeMesParaInteiro(mes)));
-//
-//		//vendas.forEach(v -> dtoList.add(new VendaDTO(v, consultarCompraVenda(v))));
-//		return dtoList;
-//	}
-	
-	public List<CompraVendaDTO> consultarCompraVenda(Venda entidade){
-		List<CompraVendaDTO> dtoList = new ArrayList<>();
-		List<CompraVenda> compraVendaList = compraVendaService.consultarCompraVendaPeloIdVenda(entidade.getId());
-		compraVendaList.forEach(c -> dtoList.add(new CompraVendaDTO(c)));
-		return dtoList;
+        try{
+            log.debug("Consultar vendas pelo ano e mês");
+            List<VendaDTO> dtoList = new ArrayList<>();
+            repository.findByDataVenda(Integer.parseInt(ano),
+                    Integer.parseInt(Util.converterNomeMesParaInteiro(mes))).forEach(a -> dtoList.add(new VendaDTO(a)));
+            return dtoList;
+        }catch (Exception e){
+            log.warn("Erro ao consultar registros", e);
+            throw e;
+        }
 	}
 
 	@Override
@@ -133,12 +67,38 @@ public class VendaServiceImpl implements VendaService {
 
 	@Override
 	public BigDecimal calcularLucroBruto(List<Integer> idVenda) {
-		return this.repository.calcularLucroBruto(idVenda);
+        try{
+            log.info("Quantidade de ids venda: {}", idVenda);
+            log.debug("Consultando registros calculo lucro bruto");
+            return this.repository.calcularLucroBruto(idVenda);
+        }catch(Exception e){
+            log.warn("Erro ao calcular registro", e);
+            throw e;
+        }
 	}
 
 	@Override
-	public Response cadastrar(Venda type) {
-		return null;
+	public Response cadastrar(Venda venda) {
+		try{
+            log.info("Cadastrando venda"
+            );
+			Response response = new Response();
+			List<Venda> vendas = new ArrayList<>();
+			if(!venda.getAtivo().getNome().isEmpty()){
+                venda.setMesCriacao(LocalDate.now());
+                venda.setMesAtualizacao(LocalDate.now());
+				venda = repository.saveAndFlush(venda);
+				vendas.add(venda);
+			}
+            log.debug("Registro salvo na base {}", venda.getId());
+			response.setMensagem("Registro salvo com sucesso");
+			response.setTipo(TipoResponse.SUCESSO);
+			response.setDtos(vendas);
+			return response;
+		}catch (Exception e){
+			log.warn("Erro ao salvar registro", e);
+			throw e;
+		}
 	}
 
 	@Override
@@ -149,10 +109,30 @@ public class VendaServiceImpl implements VendaService {
 			this.repository.delete(repository.getOne(id));
 			response.setMensagem("Registro excluido com sucesso");
 			response.setTipo(TipoResponse.SUCESSO);
+            return response;
 		}catch (Exception e){
-			response.setMensagem("Erro ao excluir registro");
-			response.setTipo(TipoResponse.ERRO);
+            log.warn("Erro ao excluir registro", e);
+            throw e;
 		}
-		return response;
+
 	}
+
+    @Override
+    public Response editar(Venda venda) {
+        Response response = new Response();
+        try{
+            log.info("Atualizando registro id: {}", venda.getId());
+            venda.setMesAtualizacao(LocalDate.now());
+
+            this.repository.save(venda);
+            log.debug("Registro atualizado: {}", venda.getId());
+
+            response.setMensagem("Registro salvo com sucesso");
+            response.setTipo(TipoResponse.SUCESSO);
+            return response;
+        }catch (Exception e){
+            log.warn("Erro ao editar registro", e);
+            throw e;
+        }
+    }
 }
