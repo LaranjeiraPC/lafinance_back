@@ -4,9 +4,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lafinance.dashboard.service.CompraVendaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lafinance.dashboard.infrastructure.api.AlphaVantageAPI;
+import com.lafinance.dashboard.service.AlphaVantageService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,80 +15,91 @@ import com.lafinance.dashboard.dto.AcaoDTO;
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.repository.AcaoRepository;
 import com.lafinance.dashboard.service.AcaoService;
-import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;
 
+@Slf4j
 @Service
 @Transactional
 public class AcaoServiceImpl implements AcaoService {
 
-    private final Logger log = LoggerFactory.getLogger(AcaoServiceImpl.class);
-
-    private final AcaoRepository repository;
-    private final AtivoService ativoService;
-
-    public AcaoServiceImpl(AcaoRepository repository, AtivoService ativoService) {
-        this.repository = repository;
-        this.ativoService = ativoService;
-    }
+    @Autowired
+    private AcaoRepository repository;
 
     @Override
     public List<AcaoDTO> consultarAcoesAtivos() {
-        List<AcaoDTO> dtoList = new ArrayList<>();
-        List<Acao> acao = repository.findByAllAndStatus();
-        acao.forEach(a -> dtoList.add(new AcaoDTO(a)));
-        return dtoList;
-    }
+        try{
+            log.debug("Consultando registros ativos - Tela ação");
+            List<AcaoDTO> dtoList = new ArrayList<>();
+            List<Acao> acao = repository.findByAllAndStatus();
 
-    @Override
-    public Response cadastrarAcao(Acao acao) {
-        Response response = new Response();
-        if(!acao.getAtivo().getNome().isEmpty()){
-            repository.save(acao);
-            response.setMensagem("Registro salvo com sucesso");
-            response.setTipo(TipoResponse.SUCESSO);
-        }else{
-            response.setMensagem("Erro ao salvar registro");
-            response.setTipo(TipoResponse.ERRO);
+            log.info("Total de registros encontrados {}", acao.size());
+            acao.forEach(a -> dtoList.add(new AcaoDTO(a)));
+            return dtoList;
+        }catch (Exception e){
+            log.error("Erro ao consultar registros - Tela Ação");
+            throw e;
         }
-        return response;
     }
 
     @Override
-    public Response editarAcao(AcaoDTO acaoDTO) {
-        Response response = new Response();
-        Acao acao = repository.getOne(acaoDTO.getId());
-        if(acao != null){
+    public Response cadastrarAcao(Acao acao) throws Exception {
+        try{
+            if(acao.getAtivo().getNome().isEmpty()) {
+                log.error("Ação não possui ativo");
+                throw new Exception();
+            }
 
+            log.debug("Salvando registro - Tela Ação");
+            acao = repository.save(acao);
+            log.info("Registro armazenado. ID {}", acao.getId());
+
+            return new Response("Registro salvo com sucesso",TipoResponse.SUCESSO, null);
+        }catch (Exception e){
+            log.error("Erro ao salvar registro - Tela Ação");
+            throw e;
+        }
+    }
+
+    @Override
+    public Response editarAcao(AcaoDTO acaoDTO) throws Exception {
+        try{
+            Acao acao = repository.getOne(acaoDTO.getId());
+
+            if(acao == null){
+                log.error("Consulta não retornou nenhum registro. ID: {}", acaoDTO.getId());
+                throw new Exception();
+            }
+
+            log.debug("Editando registro {} - Tela Ação", acaoDTO.getId());
             acao.setQuantidade(acaoDTO.getQuantidade());
             acao.setDataCompra(acaoDTO.getDataCompra());
             acao.setValorAtivoPago(acaoDTO.getValorAtivoPago());
             acao.setValorBrutoPago(acaoDTO.getValorBrutoPago());
             acao.setStatus(acaoDTO.getStatus());
+            acao.setPrecoAlvo(acaoDTO.getPrecoAlvo());
 
             repository.save(acao);
-            response.setMensagem("Registro salvo com sucesso");
-            response.setTipo(TipoResponse.SUCESSO);
-        }else{
-            response.setMensagem("Erro ao salvar registro");
-            response.setTipo(TipoResponse.ERRO);
+            log.info("Registro editado. ID {}", acao.getId());
+
+            return new Response("Registro Editado com sucesso",TipoResponse.SUCESSO, null);
+        }catch (Exception e){
+            log.error("Erro ao editar registro - Tela Ação");
+            throw e;
         }
-        return response;
     }
 
     @Override
     public Response inativarAcoes(List<Acao> acoes) {
         try{
-            Response response = new Response();
-            acoes.forEach(a -> {
-                a.setStatus("N");
-            });
+            log.debug("Inativando registros - Tela Ação");
+            log.info("Quantidade de registros desabilitados {}", acoes.size());
+            acoes.forEach(a -> a.setStatus("N"));
+
             this.repository.saveAll(acoes);
-            response.setMensagem("Registro salvo com sucesso");
-            response.setTipo(TipoResponse.SUCESSO);
-            response.setDtos(acoes);
-            return response;
+            log.debug("Registros inativados - Tela Ação");
+
+            return new Response("Registro salvo com sucesso",TipoResponse.SUCESSO, acoes);
         }catch (Exception e){
             log.warn("Erro ao inativar registros");
             throw e;
@@ -96,47 +108,82 @@ public class AcaoServiceImpl implements AcaoService {
 
     @Override
     public void ativarAcoes(List<Acao> acoes) {
-        acoes.forEach(a -> {
-            Acao acao = this.repository.getOne(a.getId());
-            acao.setStatus("S");
-        });
-        this.repository.saveAll(acoes);
+        try{
+            log.debug("Consultando ações para habilitar - Tela ação");
+            log.info("Quantidade de registro para habilitar {}", acoes);
+            acoes.forEach(a -> {
+                Acao acao = this.repository.getOne(a.getId());
+                acao.setStatus("S");
+                log.debug("Registro {} habilitado - Tela ação", acao.getId());
+            });
+            log.debug("Finalizado habilitação dos registros - Tela ação");
+            this.repository.saveAll(acoes);
+        }catch (Exception e){
+            log.warn("Erro ao ativar registros");
+            throw e;
+        }
     }
 
     @Override
     public List<Acao> consultarAcoesId(List<Integer> id) {
-        return this.repository.consultarAcoesId(id);
+        try{
+            log.debug("Consultando ações - Tela ação");
+            log.info("Ids utilizado para consulta: {} - Tela ação", id);
+            return this.repository.consultarAcoesId(id);
+        }catch (Exception e){
+            log.warn("Erro ao consultar registros");
+            throw e;
+        }
+
     }
 
     @Override
     public BigDecimal calcularLucroBruto(List<Integer> idsCompra) {
-        return this.repository.calcularValorBrutoPago(idsCompra);
+        try{
+            log.debug("Calculando registros. IDs {} - Tela ação", idsCompra);
+            return this.repository.calcularValorBrutoPago(idsCompra);
+        }catch (Exception e){
+            log.warn("Erro ao calcular registros");
+            throw e;
+        }
     }
 
     @Override
     public Response excluirAcao(Integer id) {
-        Response response = new Response();
         try{
+            log.debug("Excluindo registro de id {} - Tela ação", id);
             repository.delete(repository.getOne(id));
-            response.setMensagem("Registro excluido com sucesso");
-            response.setTipo(TipoResponse.SUCESSO);
+            log.debug("Registro de id {} excluído com sucesso - Tela ação", id);
+
+            return new Response("Registro excluido sucesso",TipoResponse.SUCESSO, null);
         }catch (Exception e){
-            response.setMensagem("Erro ao excluir registro");
-            response.setTipo(TipoResponse.ERRO);
+            log.warn("Erro ao excluir registro");
+            throw e;
         }
-        return response;
     }
 
     @Override
     public List<AcaoDTO> consultarAcoesAtivosVenda(String nome) {
-        List<AcaoDTO> dtos = new ArrayList<>();
-        this.repository.findByAtivoNome(nome).forEach(a -> dtos.add(new AcaoDTO(a)));
-        return dtos;
+        try{
+            log.debug("Consultando ações ativas para venda pelo nome da ação: {} - Tela ação", nome);
+            List<AcaoDTO> dtos = new ArrayList<>();
+            this.repository.findByAtivoNome(nome).forEach(a -> dtos.add(new AcaoDTO(a)));
+            return dtos;
+        }catch (Exception e){
+            log.warn("Erro ao consultar registro");
+            throw e;
+        }
     }
 
     @Override
     public List<Acao> consultarAcoesPeloIdVenda(Integer idVenda) {
-        return this.repository.findByVenda(idVenda);
+        try{
+            log.debug("Consultando registros pelo id {} venda - Tela ação", idVenda);
+            return this.repository.findByVenda(idVenda);
+        }catch (Exception e){
+            log.warn("Erro ao consultar registro");
+            throw e;
+        }
     }
 
 }

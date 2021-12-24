@@ -17,6 +17,7 @@ public class AcaoDTO {
 	private LocalDate mesCriacao;
 	private LocalDate mesAtualizacao;
 	private String status;
+	private BigDecimal precoAlvo;
 	
 	public AcaoDTO() {}
 	
@@ -30,6 +31,7 @@ public class AcaoDTO {
 		setMesCriacao(acao.getMesCriacao());
 		setMesAtualizacao(acao.getMesAtualizacao());
 		setStatus(acao.getStatus());
+		setPrecoAlvo(acao.getPrecoAlvo());
 	}
 
 	public Integer getId() {
@@ -103,5 +105,12 @@ public class AcaoDTO {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
+
+	public BigDecimal getPrecoAlvo() {
+		return precoAlvo;
+	}
+
+	public void setPrecoAlvo(BigDecimal precoAlvo) {
+		this.precoAlvo = precoAlvo;
+	}
 }

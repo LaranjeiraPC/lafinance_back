@@ -40,7 +40,7 @@ public class DashServiceImpl implements DashService {
 	}
 
 	@Override
-	public DashDTO consultarDadosDahsboard() {
+	public DashDTO consultarDadosDahsboard() throws Exception {
 		log.debug("Calculando Investimento total");
 		DashDTO dto = new DashDTO();
 		LocalDate data = LocalDate.now();
@@ -76,7 +76,7 @@ public class DashServiceImpl implements DashService {
 		});
 	}
 
-	private void consultarInvestimentoTotal() {
+	private void consultarInvestimentoTotal() throws Exception {
 		List<AcaoDTO> acoes = acaoService.consultarAcoesAtivos();
 		if (!acoes.isEmpty()) {
 			acoes.forEach(a -> {

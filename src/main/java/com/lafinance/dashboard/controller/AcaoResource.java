@@ -21,8 +21,6 @@ import javax.ws.rs.DELETE;
 @RequestMapping("/api/acao")
 public class AcaoResource {
 
-    private final Logger log = LoggerFactory.getLogger(AcaoResource.class);
-
     private final AcaoService acaoService;
 
     public AcaoResource(AcaoService acaoService) {
@@ -62,7 +60,6 @@ public class AcaoResource {
     @CrossOrigin
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<Response> excluirAcao(@PathVariable(name = "id") Integer id) {
-        log.debug("API - excluir Acao");
         try {
             acaoService.excluirAcao(id);
             return ResponseEntity.noContent().build();
@@ -74,7 +71,6 @@ public class AcaoResource {
     @CrossOrigin
     @GetMapping("/consulta/acoes/venda/{nome}")
     public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivosVenda(@PathVariable(name = "nome") String nome) {
-        log.debug("API - Consultar Ações para tela de venda");
         try {
             return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosVenda(nome));
         } catch (Exception e) {
@@ -91,6 +87,5 @@ public class AcaoResource {
             return ResponseEntity.badRequest().build();
         }
     }
-
 
 }
