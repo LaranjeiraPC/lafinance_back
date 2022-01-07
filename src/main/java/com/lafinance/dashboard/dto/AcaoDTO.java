@@ -5,7 +5,11 @@ import java.time.LocalDate;
 
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.model.Ativo;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class AcaoDTO {
 
 	private Integer id;
@@ -18,6 +22,7 @@ public class AcaoDTO {
 	private LocalDate mesAtualizacao;
 	private String status;
 	private BigDecimal precoAlvo;
+	private BigDecimal precoHoje;
 	
 	public AcaoDTO() {}
 	
@@ -32,85 +37,7 @@ public class AcaoDTO {
 		setMesAtualizacao(acao.getMesAtualizacao());
 		setStatus(acao.getStatus());
 		setPrecoAlvo(acao.getPrecoAlvo());
+		setPrecoHoje(acao.getPrecoHoje());
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Ativo getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Ativo ativo) {
-		this.ativo = ativo;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-
-	public BigDecimal getValorBrutoPago() {
-		return valorBrutoPago;
-	}
-
-	public void setValorBrutoPago(BigDecimal valorBrutoPago) {
-		this.valorBrutoPago = valorBrutoPago;
-	}
-
-	public BigDecimal getValorAtivoPago() {
-		return valorAtivoPago;
-	}
-
-	public void setValorAtivoPago(BigDecimal valorAtivoPago) {
-		this.valorAtivoPago = valorAtivoPago;
-	}
-
-	public LocalDate getMesCriacao() {
-		return mesCriacao;
-	}
-
-	public void setMesCriacao(LocalDate mesCriacao) {
-		this.mesCriacao = mesCriacao;
-	}
-
-	public LocalDate getMesAtualizacao() {
-		return mesAtualizacao;
-	}
-
-	public void setMesAtualizacao(LocalDate mesAtualizacao) {
-		this.mesAtualizacao = mesAtualizacao;
-	}
-
-	public LocalDate getDataCompra() {
-		return dataCompra;
-	}
-
-	public void setDataCompra(LocalDate dataCompra) {
-		this.dataCompra = dataCompra;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public BigDecimal getPrecoAlvo() {
-		return precoAlvo;
-	}
-
-	public void setPrecoAlvo(BigDecimal precoAlvo) {
-		this.precoAlvo = precoAlvo;
-	}
 }

@@ -21,4 +21,6 @@ public interface AcaoService {
 	List<Acao> consultarAcoesId(List<Integer> id);
 	BigDecimal calcularLucroBruto(List<Integer> idsCompra);
 
+	Response atualizarPrecoAtual();
+
 }

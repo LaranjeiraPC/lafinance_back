@@ -2,19 +2,13 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
-import com.lafinance.dashboard.dto.VendaDTO;
 import com.lafinance.dashboard.model.Acao;
-import com.lafinance.dashboard.model.Ativo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.lafinance.dashboard.dto.AcaoDTO;
 import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.util.Response;
-
-import javax.ws.rs.DELETE;
 
 @CrossOrigin
 @RestController
@@ -83,6 +77,16 @@ public class AcaoResource {
     public ResponseEntity<Response> inativarAcoes(@RequestBody List<Acao> acao) {
         try {
             return ResponseEntity.ok().body(acaoService.inativarAcoes(acao));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/atualizar")
+    public ResponseEntity<Response> atualizarRegistroAtivos() {
+        try {
+            return ResponseEntity.ok().body(acaoService.atualizarPrecoAtual());
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

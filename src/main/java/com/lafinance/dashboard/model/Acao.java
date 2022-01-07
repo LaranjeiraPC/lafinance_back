@@ -58,6 +58,9 @@ public class Acao implements Serializable{
 
 	@Column(name="precoalvo", nullable=true)
 	private BigDecimal precoAlvo;
+
+	@Column(name="precohoje", nullable=true)
+	private BigDecimal precoHoje;
 	
 	public Acao() {}
 }

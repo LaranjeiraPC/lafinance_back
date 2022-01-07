@@ -19,7 +19,7 @@ public class AlphaVantageServiceImpl implements AlphaVantageService {
 
     @Override
     public BigDecimal consultarPrecoAlvo(String ativo) {
-        new Thread(() -> {
+//        new Thread(() -> {
             try {
                 PRECO_ALVO = BigDecimal.ZERO;
                 PRECO_ALVO = alphaVantageAPI.consultarPrecoAlvo(ativo);
@@ -27,7 +27,7 @@ public class AlphaVantageServiceImpl implements AlphaVantageService {
                 e.printStackTrace();
                 log.error(e.getMessage());
             }
-        }).start();
+//        }).start();
         return PRECO_ALVO;
     }
 

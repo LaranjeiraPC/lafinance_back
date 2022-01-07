@@ -1,10 +1,10 @@
 package com.lafinance.dashboard.service.impl;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lafinance.dashboard.infrastructure.api.AlphaVantageAPI;
 import com.lafinance.dashboard.service.AlphaVantageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +25,9 @@ public class AcaoServiceImpl implements AcaoService {
 
     @Autowired
     private AcaoRepository repository;
+
+    @Autowired
+    private AlphaVantageService alphaVantageService;
 
     @Override
     public List<AcaoDTO> consultarAcoesAtivos() {
@@ -53,6 +56,8 @@ public class AcaoServiceImpl implements AcaoService {
             log.debug("Salvando registro - Tela Ação");
             acao = repository.save(acao);
             log.info("Registro armazenado. ID {}", acao.getId());
+
+            atualizarPrecoAtual();
 
             return new Response("Registro salvo com sucesso",TipoResponse.SUCESSO, null);
         }catch (Exception e){
@@ -182,6 +187,30 @@ public class AcaoServiceImpl implements AcaoService {
             return this.repository.findByVenda(idVenda);
         }catch (Exception e){
             log.warn("Erro ao consultar registro");
+            throw e;
+        }
+    }
+
+    @Override
+    public Response atualizarPrecoAtual() {
+        try{
+            log.debug("Consultando registros ativos - Tela Home");
+            List<Acao> acao = repository.findByAllAndStatus();
+
+            log.info("Total de registros encontrados {} - Tela Home", acao.size());
+            acao.forEach(a -> {
+                if(!a.getMesAtualizacao().isEqual(LocalDate.now())){
+                    log.debug("Atualizando preço atual - Tela Home");
+                    var atualizado = alphaVantageService.consultarPrecoAlvo(a.getAtivo().getNome());
+                    a.setPrecoHoje(atualizado);
+                    a.setMesAtualizacao(LocalDate.now());
+                    log.info("Registro atualizado {} - Tela Home", a.getAtivo().getNome());
+                }
+            });
+
+            return new Response("Preço atual dos ativos atualizados", TipoResponse.SUCESSO, null);
+        }catch (Exception e){
+            log.error("Erro ao atualizar registros - Tela Ação");
             throw e;
         }
     }
