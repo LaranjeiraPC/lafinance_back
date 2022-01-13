@@ -3,8 +3,6 @@ package com.lafinance.dashboard.controller;
 import java.util.List;
 
 import com.lafinance.dashboard.model.Ativo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,15 +10,10 @@ import com.lafinance.dashboard.dto.AtivoDTO;
 import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.util.Response;
 
-import javax.validation.Valid;
-
 @CrossOrigin
 @RestController
 @RequestMapping("/api/ativo")
 public class AtivoResource {
-
-	private final Logger log = LoggerFactory.getLogger(AtivoResource.class);
-
 	private final AtivoService ativoService;
 
 	public AtivoResource(AtivoService ativoService) {
@@ -50,9 +43,6 @@ public class AtivoResource {
 	@CrossOrigin
 	@GetMapping("/excluir/{id}")
 	public ResponseEntity<Response> excluirAtivo(@PathVariable(name = "id") Integer id) {
-
-		log.debug("API - excluir Ativo");
-
 		try {
 			return ResponseEntity.ok().body(ativoService.excluirAtivo(id));
 		} catch (Exception e) {
@@ -63,7 +53,6 @@ public class AtivoResource {
 	@CrossOrigin
 	@GetMapping("/consulta/")
 	public ResponseEntity<List<AtivoDTO>> consultarAtivos() {
-		log.debug("API - Consultar ativos");
 		try {
 			return ResponseEntity.ok().body(ativoService.consultarAtivo());
 		} catch (Exception e) {

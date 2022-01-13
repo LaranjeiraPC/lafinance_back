@@ -30,11 +30,12 @@ public class AcaoServiceImpl implements AcaoService {
     private AlphaVantageService alphaVantageService;
 
     @Override
-    public List<AcaoDTO> consultarAcoesAtivos() {
+    public List<AcaoDTO> consultarAcoesAtivosOutrosMeses(Integer mes, Integer ano) {
         try{
             log.debug("Consultando registros ativos - Tela ação");
             List<AcaoDTO> dtoList = new ArrayList<>();
-            List<Acao> acao = repository.findByAllAndStatus();
+
+            List<Acao> acao = repository.consultarAcoesAtivosMesCorrente(mes, ano);
 
             log.info("Total de registros encontrados {}", acao.size());
             acao.forEach(a -> dtoList.add(new AcaoDTO(a)));
@@ -211,6 +212,33 @@ public class AcaoServiceImpl implements AcaoService {
             return new Response("Preço atual dos ativos atualizados", TipoResponse.SUCESSO, null);
         }catch (Exception e){
             log.error("Erro ao atualizar registros - Tela Ação");
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Acao> consultarAcoesAtivosMesCorrente(Integer mes, Integer ano) {
+        try{
+            log.debug("Consultando registros ativos pelo mês corrente - Tela ação");
+            List<Acao> acao = repository.consultarAcoesAtivosMesCorrente(ano, mes);
+            return acao;
+        }catch (Exception e){
+            log.error("Erro ao consultar registros - Tela Ação");
+            throw e;
+        }
+    }
+
+    @Override
+    public List<AcaoDTO> consultarAcoesAtivos() {
+        try{
+            log.debug("Consultando registros ativos ativos - Tela ação");
+
+            List<AcaoDTO> acaoDTO = new ArrayList<>();
+            List<Acao> acaoList = repository.findByAllAndStatus();
+            acaoList.forEach(a -> acaoDTO.add(new AcaoDTO(a)));
+            return acaoDTO;
+        }catch (Exception e){
+            log.error("Erro ao consultar registros - Tela Ação");
             throw e;
         }
     }

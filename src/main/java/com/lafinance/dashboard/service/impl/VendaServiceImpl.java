@@ -9,8 +9,10 @@ import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.service.CompraVendaService;
 import com.lafinance.dashboard.service.VendaService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,26 +23,24 @@ import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;
 import com.lafinance.dashboard.util.Util;
 
+@Slf4j
 @Service
 @Transactional
 public class VendaServiceImpl implements VendaService {
 
-	private final Logger log = LoggerFactory.getLogger(VendaServiceImpl.class);
+	@Autowired
+	private VendaRepository repository;
 
-	private final VendaRepository repository;
-	private final AcaoService acaoService;
-	private final AtivoService ativoService;
-	private final CompraVendaService compraVendaService;
+	@Autowired
+	private AcaoService acaoService;
+
+	@Autowired
+	private AtivoService ativoService;
+
+	@Autowired
+	private CompraVendaService compraVendaService;
 	
 	private Venda venda = new Venda();
-
-	public VendaServiceImpl(VendaRepository repository, AtivoService ativoService, AcaoService acaoService,
-			CompraVendaService compraVenda) {
-		this.repository = repository;
-		this.ativoService = ativoService;
-		this.acaoService = acaoService;
-		this.compraVendaService = compraVenda;
-	}
 
 	@Override
 	public List<VendaDTO> consultarVendasPeloAnoMesSelecionado(String ano, String mes) {

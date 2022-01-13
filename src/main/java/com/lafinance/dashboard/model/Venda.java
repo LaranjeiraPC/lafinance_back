@@ -1,5 +1,8 @@
 package com.lafinance.dashboard.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,6 +16,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "venda")
 public class Venda implements Serializable {
@@ -49,68 +54,4 @@ public class Venda implements Serializable {
 	private LocalDate mesAtualizacao;
 		
 	public Venda() {}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Ativo getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Ativo ativo) {
-		this.ativo = ativo;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-
-	public BigDecimal getValorBrutoVenda() {
-		return valorBrutoVenda;
-	}
-
-	public void setValorBrutoVenda(BigDecimal valorBrutoVenda) {
-		this.valorBrutoVenda = valorBrutoVenda;
-	}
-
-	public BigDecimal getValorAtivoVenda() {
-		return valorAtivoVenda;
-	}
-
-	public void setValorAtivoVenda(BigDecimal valorAtivoVenda) {
-		this.valorAtivoVenda = valorAtivoVenda;
-	}
-
-	public LocalDate getDataVenda() {
-		return dataVenda;
-	}
-
-	public void setDataVenda(LocalDate dataVenda) {
-		this.dataVenda = dataVenda;
-	}
-
-	public LocalDate getMesCriacao() {
-		return mesCriacao;
-	}
-
-	public void setMesCriacao(LocalDate mesCriacao) {
-		this.mesCriacao = mesCriacao;
-	}
-
-	public LocalDate getMesAtualizacao() {
-		return mesAtualizacao;
-	}
-
-	public void setMesAtualizacao(LocalDate mesAtualizacao) {
-		this.mesAtualizacao = mesAtualizacao;
-	}
 }

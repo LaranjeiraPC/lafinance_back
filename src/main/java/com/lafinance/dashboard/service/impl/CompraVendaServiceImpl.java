@@ -4,8 +4,10 @@ import java.util.List;
 
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.service.AcaoService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,20 +15,17 @@ import com.lafinance.dashboard.model.CompraVenda;
 import com.lafinance.dashboard.repository.CompraVendaRepository;
 import com.lafinance.dashboard.service.CompraVendaService;
 
+@Slf4j
 @Service
 @Transactional
 public class CompraVendaServiceImpl implements CompraVendaService{
 
-	private final Logger log = LoggerFactory.getLogger(CompraVendaServiceImpl.class);
-	
-	private final CompraVendaRepository repository;
-	private final AcaoService acaoService;
-	
-	public CompraVendaServiceImpl(CompraVendaRepository repository, AcaoService acaoService) {
-		this.repository = repository;
-		this.acaoService = acaoService;
-	}	
-	
+	@Autowired
+	private CompraVendaRepository repository;
+
+	@Autowired
+	private AcaoService acaoService;
+
 	@Override
 	public void salvarRegistro(List<CompraVenda> compraVenda) {
 		repository.saveAll(compraVenda);

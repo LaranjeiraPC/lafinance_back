@@ -22,10 +22,13 @@ public class AcaoResource {
     }
 
     @CrossOrigin
-    @GetMapping("/consulta/acoes/")
-    public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivos() {
+    @GetMapping("/consulta/acoes/{mes}/{ano}")
+    public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivosOutrosMeses(
+            @PathVariable(name = "mes") Integer mes,
+            @PathVariable(name = "ano") Integer ano
+    ) {
         try {
-            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivos());
+            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosOutrosMeses(mes, ano));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
@@ -87,6 +90,28 @@ public class AcaoResource {
     public ResponseEntity<Response> atualizarRegistroAtivos() {
         try {
             return ResponseEntity.ok().body(acaoService.atualizarPrecoAtual());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/consulta/{mes}/{ano}")
+    public ResponseEntity<List<Acao>> consultarAcoesAtivosMesCorrente(
+            @PathVariable(name = "mes") Integer mes,
+            @PathVariable(name = "ano") Integer ano) {
+        try {
+            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosMesCorrente(mes, ano));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/consulta/all")
+    public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivos() {
+        try {
+            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivos());
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

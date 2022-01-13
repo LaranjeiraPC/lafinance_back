@@ -13,18 +13,14 @@ import com.lafinance.dashboard.model.Acao;
 @Repository
 public interface AcaoRepository extends JpaRepository<Acao, Integer> {
 
-	List<Acao> findByStatus(String status);
-
-	@Query("SELECT a FROM Acao a where date_part('year', a.dataCompra) = :ano and a.status = 'S'")
-	List<Acao> consultarMeses(@Param("ano") Integer ano);
-
 	@Query("SELECT a FROM Acao a where date_part('year', a.dataCompra) = :ano and date_part('month', a.dataCompra) = :mes and a.status = 'S'")
-	List<Acao> findByDataCompraAndStatus(@Param("ano") Integer ano, @Param("mes") Integer mes);
+	List<Acao> consultarAcoesAtivosMesCorrente(@Param("ano") Integer ano, @Param("mes") Integer mes);
+
+	@Query("SELECT a FROM Acao a where date_part('year', a.dataCompra) != :ano and date_part('month', a.dataCompra) != :mes and a.status = 'S'")
+	List<Acao> consultarAcoesAtivosOutrosMeses(@Param("ano") Integer ano, @Param("mes") Integer mes);
 	
 	@Query("SELECT a FROM Acao a where a.status = 'S'")
 	List<Acao> findByAllAndStatus();
-	
-	List<Acao> findByAtivoNomeAndStatus(String nome, String status);
 
 	@Query("SELECT a FROM Acao a where a.id = :id")
 	List<Acao> consultarAcoesId(@Param("id") List<Integer> id);
@@ -36,6 +32,5 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
 	List<Acao> findByVenda(Integer id);
 
 	List<Acao> findByAtivoNome(String nome);
-
 
 }

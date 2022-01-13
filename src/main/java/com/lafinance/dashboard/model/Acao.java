@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Table(name = "acao")
-public class Acao implements Serializable{
+public class Acao implements Serializable {
 
 	/**
 	 * 

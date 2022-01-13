@@ -3,8 +3,10 @@ package com.lafinance.dashboard.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,18 +17,14 @@ import com.lafinance.dashboard.service.ConfiguracaoService;
 import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;
 
+@Slf4j
 @Service
 @Transactional
 public class ConfiguracaoServiceImpl implements ConfiguracaoService{
-	
-	private final Logger log = LoggerFactory.getLogger(ConfiguracaoServiceImpl.class);
 
-	private final ConfiguracaoRepository configuracaoRepository;
-	
-	public ConfiguracaoServiceImpl(ConfiguracaoRepository configuracaoRepository) {
-	this.configuracaoRepository = configuracaoRepository;	
-	}
-	
+	@Autowired
+	private ConfiguracaoRepository configuracaoRepository;
+
 	@Override
 	public ConfiguracaoDTO consultarDadosConfiguracao() {
 		log.debug("Consultando dados configuracao");

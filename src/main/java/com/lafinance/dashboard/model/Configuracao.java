@@ -1,5 +1,8 @@
 package com.lafinance.dashboard.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -10,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "configuracao")
 public class Configuracao implements Serializable{
@@ -33,38 +38,5 @@ public class Configuracao implements Serializable{
 	private String ativoDois;
 	
 	public Configuracao() {}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public BigDecimal getValorBrutoMeta() {
-		return valorBrutoMeta;
-	}
-
-	public void setValorBrutoMeta(BigDecimal valorBrutoMeta) {
-		this.valorBrutoMeta = valorBrutoMeta;
-	}
-
-	public String getAtivoUm() {
-		return ativoUm;
-	}
-
-	public void setAtivoUm(String ativoUm) {
-		this.ativoUm = ativoUm;
-	}
-
-	public String getAtivoDois() {
-		return ativoDois;
-	}
-
-	public void setAtivoDois(String ativoDois) {
-		this.ativoDois = ativoDois;
-	}
-	
 
 }
