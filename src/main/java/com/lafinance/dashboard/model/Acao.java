@@ -1,5 +1,8 @@
 package com.lafinance.dashboard.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,8 +17,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "acao")
-public class Acao implements Serializable{
+public class Acao implements Serializable {
 
 	/**
 	 * 
@@ -50,80 +55,12 @@ public class Acao implements Serializable{
 	
 	@Column(name="status", nullable=true)
 	private String status;
+
+	@Column(name="precoalvo", nullable=true)
+	private BigDecimal precoAlvo;
+
+	@Column(name="precohoje", nullable=true)
+	private BigDecimal precoHoje;
 	
 	public Acao() {}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Ativo getAtivo() {
-		return ativo;
-	}
-
-	public void setAtivo(Ativo ativo) {
-		this.ativo = ativo;
-	}
-
-	public Integer getQuantidade() {
-		return quantidade;
-	}
-
-	public void setQuantidade(Integer quantidade) {
-		this.quantidade = quantidade;
-	}
-
-	public BigDecimal getValorBrutoPago() {
-		return valorBrutoPago;
-	}
-
-	public void setValorBrutoPago(BigDecimal valorBrutoPago) {
-		this.valorBrutoPago = valorBrutoPago;
-	}
-
-	public BigDecimal getValorAtivoPago() {
-		return valorAtivoPago;
-	}
-
-	public void setValorAtivoPago(BigDecimal valorAtivoPago) {
-		this.valorAtivoPago = valorAtivoPago;
-	}
-
-	public LocalDate getMesCriacao() {
-		return mesCriacao;
-	}
-
-	public void setMesCriacao(LocalDate mesCriacao) {
-		this.mesCriacao = mesCriacao;
-	}
-
-	public LocalDate getMesAtualizacao() {
-		return mesAtualizacao;
-	}
-
-	public void setMesAtualizacao(LocalDate mesAtualizacao) {
-		this.mesAtualizacao = mesAtualizacao;
-	}
-
-	public LocalDate getDataCompra() {
-		return dataCompra;
-	}
-
-	public void setDataCompra(LocalDate dataCompra) {
-		this.dataCompra = dataCompra;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	
-
 }

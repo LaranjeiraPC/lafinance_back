@@ -3,7 +3,11 @@ package com.lafinance.dashboard.dto;
 import java.io.Serializable;
 
 import com.lafinance.dashboard.model.Usuario;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class UsuarioDTO implements Serializable{
 
 	/**
@@ -26,43 +30,4 @@ public class UsuarioDTO implements Serializable{
 		this.ativoUsuario = user.getAtivoUsuario();
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getNomeUsuario() {
-		return nomeUsuario;
-	}
-
-	public void setNomeUsuario(String nomeUsuario) {
-		this.nomeUsuario = nomeUsuario;
-	}
-
-	public String getEmailUsuario() {
-		return emailUsuario;
-	}
-
-	public void setEmailUsuario(String emailUsuario) {
-		this.emailUsuario = emailUsuario;
-	}
-
-	public String getPerfilUsuario() {
-		return perfilUsuario;
-	}
-
-	public void setPerfilUsuario(String perfilUsuario) {
-		this.perfilUsuario = perfilUsuario;
-	}
-
-	public String getAtivoUsuario() {
-		return ativoUsuario;
-	}
-
-	public void setAtivoUsuario(String ativoUsuario) {
-		this.ativoUsuario = ativoUsuario;
-	}
 }

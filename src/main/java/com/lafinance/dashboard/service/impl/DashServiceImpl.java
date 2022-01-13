@@ -6,8 +6,10 @@ import java.util.List;
 
 import com.lafinance.dashboard.dto.AcaoDTO;
 import com.lafinance.dashboard.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,32 +17,30 @@ import com.lafinance.dashboard.dto.DashDTO;
 import com.lafinance.dashboard.dto.VendaDTO;
 import com.lafinance.dashboard.model.CompraVenda;
 
+@Slf4j
 @Service
 @Transactional
 public class DashServiceImpl implements DashService {
 
-	private final Logger log = LoggerFactory.getLogger(DashServiceImpl.class);
+	@Autowired
+	private AcaoService acaoService;
+	@Autowired
 
-	private final AcaoService acaoService;
-	private final CompraVendaService compraVendaService;
-	private final VendaService vendaService;
-	private final ConfiguracaoService configuracaoService;
+	private CompraVendaService compraVendaService;
+
+	@Autowired
+	private VendaService vendaService;
+
+	@Autowired
+	private ConfiguracaoService configuracaoService;
 
 	private BigDecimal investimentoTotal = new BigDecimal("0.0");
 	private BigDecimal brutoPago = new BigDecimal("0.0");
 	private BigDecimal brutoRecebido = new BigDecimal("0.0");
 	private Integer quantidadeTotal = 0;
 
-	public DashServiceImpl(AcaoService acaoService, CompraVendaService compraVendaService, VendaService vendaService,
-			ConfiguracaoService configuracaoService) {
-		this.acaoService = acaoService;
-		this.compraVendaService = compraVendaService;
-		this.vendaService = vendaService;
-		this.configuracaoService = configuracaoService;
-	}
-
 	@Override
-	public DashDTO consultarDadosDahsboard() {
+	public DashDTO consultarDadosDahsboard() throws Exception {
 		log.debug("Calculando Investimento total");
 		DashDTO dto = new DashDTO();
 		LocalDate data = LocalDate.now();
@@ -76,7 +76,7 @@ public class DashServiceImpl implements DashService {
 		});
 	}
 
-	private void consultarInvestimentoTotal() {
+	private void consultarInvestimentoTotal() throws Exception {
 		List<AcaoDTO> acoes = acaoService.consultarAcoesAtivos();
 		if (!acoes.isEmpty()) {
 			acoes.forEach(a -> {

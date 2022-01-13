@@ -1,7 +1,12 @@
 package com.lafinance.dashboard.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Getter
+@Setter
 public class LucroPrejuizoDTO {
 	
 	private BigDecimal indiceLucroPrejuizo;
@@ -9,19 +14,6 @@ public class LucroPrejuizoDTO {
 	
 	public LucroPrejuizoDTO(BigDecimal indiceLucroPrejuizo, BigDecimal valorLucroPrejuizo) {
 		this.indiceLucroPrejuizo = indiceLucroPrejuizo;
-		this.valorLucroPrejuizo = valorLucroPrejuizo;
-	}
-	
-	public BigDecimal getIndiceLucroPrejuizo() {
-		return indiceLucroPrejuizo;
-	}
-	public void setIndiceLucroPrejuizo(BigDecimal indiceLucroPrejuizo) {
-		this.indiceLucroPrejuizo = indiceLucroPrejuizo;
-	}
-	public BigDecimal getValorLucroPrejuizo() {
-		return valorLucroPrejuizo;
-	}
-	public void setValorLucroPrejuizo(BigDecimal valorLucroPrejuizo) {
 		this.valorLucroPrejuizo = valorLucroPrejuizo;
 	}
 

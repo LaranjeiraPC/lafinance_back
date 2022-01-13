@@ -1,6 +1,5 @@
 package com.lafinance.dashboard.service.impl;
 
-import com.lafinance.dashboard.dto.VendaDTO;
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.model.CompraVenda;
 import com.lafinance.dashboard.model.Venda;
@@ -8,8 +7,8 @@ import com.lafinance.dashboard.repository.AnaliseRepository;
 import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.service.AnaliseService;
 import com.lafinance.dashboard.service.VendaService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,21 +16,19 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @Transactional
 public class AnaliseServiceImpl implements AnaliseService {
 
-    private final Logger log = LoggerFactory.getLogger(AnaliseServiceImpl.class);
+    @Autowired
+    private AnaliseRepository analiseRepository;
 
-    private final AnaliseRepository analiseRepository;
-    private final VendaService vendaService;
-    private final AcaoService acaoService;
+    @Autowired
+    private VendaService vendaService;
 
-    public AnaliseServiceImpl(AnaliseRepository analiseRepository, VendaService vendaService, AcaoService acaoService){
-        this.analiseRepository = analiseRepository;
-        this.vendaService = vendaService;
-        this.acaoService = acaoService;
-    }
+    @Autowired
+    private AcaoService acaoService;
 
     @Override
     public BigDecimal calcularLucroBruto(Integer idVenda) {

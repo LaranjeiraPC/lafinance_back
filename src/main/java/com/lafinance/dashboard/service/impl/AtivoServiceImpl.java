@@ -3,8 +3,10 @@ package com.lafinance.dashboard.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,18 +17,14 @@ import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;
 
+@Slf4j
 @Service
 @Transactional
 public class AtivoServiceImpl implements AtivoService{
-	
-	private final Logger log = LoggerFactory.getLogger(AtivoServiceImpl.class);
 
-	private final AtivoRepository ativoRepository;
-	
-	public AtivoServiceImpl(AtivoRepository repository) {
-		this.ativoRepository = repository;
-	}
-	
+	@Autowired
+	private AtivoRepository ativoRepository;
+
 	@Override
 	public Ativo consultarNomeAtivo(String nome) {
 		log.debug("Consultando entidade Ativo pelo nome");

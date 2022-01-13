@@ -1,10 +1,15 @@
 package com.lafinance.dashboard.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "compravenda")
 public class CompraVenda implements Serializable {
 
@@ -23,28 +28,4 @@ public class CompraVenda implements Serializable {
 	private Venda venda;
 	
 	public CompraVenda() {}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Acao getCompra() {
-		return compra;
-	}
-
-	public void setCompra(Acao compra) {
-		this.compra = compra;
-	}
-
-	public Venda getVenda() {
-		return venda;
-	}
-
-	public void setVenda(Venda venda) {
-		this.venda = venda;
-	}
 }
