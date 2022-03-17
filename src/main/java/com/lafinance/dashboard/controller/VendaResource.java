@@ -3,6 +3,7 @@ package com.lafinance.dashboard.controller;
 import java.util.List;
 
 import com.lafinance.dashboard.model.Venda;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,11 +16,8 @@ import com.lafinance.dashboard.util.Response;
 @RequestMapping("/api/venda")
 public class VendaResource {
 
-	private final VendaService vendaService;
-
-	public VendaResource(VendaService vendaService) {
-		this.vendaService = vendaService;
-	}
+	@Autowired
+	private VendaService vendaService;
 
 	@CrossOrigin
 	@PostMapping("/venda/")

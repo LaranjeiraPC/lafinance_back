@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,11 +17,9 @@ import com.lafinance.dashboard.util.Response;
 @RestController
 @RequestMapping("/api/configuracao")
 public class ConfiguracaoResource {
-	private final ConfiguracaoService configuracaoService;
 
-	public ConfiguracaoResource(ConfiguracaoService configuracaoService) {
-		this.configuracaoService = configuracaoService;
-	}
+	@Autowired
+	private ConfiguracaoService configuracaoService;
 
 	@CrossOrigin
 	@PostMapping("/salvar/")

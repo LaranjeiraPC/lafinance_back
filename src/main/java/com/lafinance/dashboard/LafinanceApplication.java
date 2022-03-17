@@ -20,6 +20,7 @@ public class LafinanceApplication {
 		SpringApplication app = new SpringApplication(LafinanceApplication.class);
 		
 		Environment env = app.run(args).getEnvironment();
+
         String protocol = "http";
         if (env.getProperty("server.ssl.key-store") != null) {
             protocol = "https";
@@ -31,10 +32,10 @@ public class LafinanceApplication {
                 "Profile(s): \t{}\n----------------------------------------------------------",
             env.getProperty("spring.application.name"),
             protocol,
-            env.getProperty("server.port"),
+            "8080",
             protocol,
             InetAddress.getLocalHost().getHostAddress(),
-            env.getProperty("server.port"),
+            "8080",
             env.getActiveProfiles());
 	}
 

@@ -1,6 +1,7 @@
 package com.lafinance.dashboard.controller;
 
 import com.lafinance.dashboard.service.AnaliseService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +12,8 @@ import java.math.BigDecimal;
 @RequestMapping("/api/analise")
 public class AnaliseResource {
 
-    private final AnaliseService analiseService;
-
-    public AnaliseResource(AnaliseService analiseService) {
-        this.analiseService = analiseService;
-    }
+    @Autowired
+    private AnaliseService analiseService;
 
     @CrossOrigin
     @GetMapping("/calculo/{idVenda}")
