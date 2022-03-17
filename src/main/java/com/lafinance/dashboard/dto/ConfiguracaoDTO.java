@@ -3,7 +3,11 @@ package com.lafinance.dashboard.dto;
 import java.math.BigDecimal;
 
 import com.lafinance.dashboard.model.Configuracao;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class ConfiguracaoDTO {
 	
 	private Integer id;
@@ -18,35 +22,6 @@ public class ConfiguracaoDTO {
 		setValorBrutoMeta(config.getValorBrutoMeta());
 		setAtivoUm(config.getAtivoUm());
 		setAtivoDois(config.getAtivoDois());
-	}
-	
-	public Integer getId() {
-		return id;
-	}
-	public void setId(Integer id) {
-		this.id = id;
-	}
-	public BigDecimal getValorBrutoMeta() {
-		return valorBrutoMeta;
-	}
-	public void setValorBrutoMeta(BigDecimal valorBrutoMeta) {
-		this.valorBrutoMeta = valorBrutoMeta;
-	}
-
-	public String getAtivoUm() {
-		return ativoUm;
-	}
-
-	public void setAtivoUm(String ativoUm) {
-		this.ativoUm = ativoUm;
-	}
-
-	public String getAtivoDois() {
-		return ativoDois;
-	}
-
-	public void setAtivoDois(String ativoDois) {
-		this.ativoDois = ativoDois;
 	}
 
 }

@@ -1,5 +1,8 @@
 package com.lafinance.dashboard.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -9,6 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "usuario")
 public class Usuario implements Serializable{
@@ -45,50 +50,6 @@ public class Usuario implements Serializable{
 		this.emailUsuario = user.getEmailUsuario();
 		this.perfilUsuario = user.getPerfilUsuario();
 		this.ativoUsuario = user.getAtivoUsuario();
-	}
-
-	public String getNomeUsuario() {
-		return nomeUsuario;
-	}
-
-	public void setNomeUsuario(String nomeUsuario) {
-		this.nomeUsuario = nomeUsuario;
-	}
-
-	public void setSenhaUsuario(String senhaUsuario) {
-		this.senhaUsuario = senhaUsuario;
-	}
-
-	public String getEmailUsuario() {
-		return emailUsuario;
-	}
-
-	public void setEmailUsuario(String emailUsuario) {
-		this.emailUsuario = emailUsuario;
-	}
-
-	public String getPerfilUsuario() {
-		return perfilUsuario;
-	}
-
-	public void setPerfilUsuario(String perfilUsuario) {
-		this.perfilUsuario = perfilUsuario;
-	}
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getAtivoUsuario() {
-		return ativoUsuario;
-	}
-
-	public void setAtivoUsuario(String ativoUsuario) {
-		this.ativoUsuario = ativoUsuario;
 	}
 	
 }

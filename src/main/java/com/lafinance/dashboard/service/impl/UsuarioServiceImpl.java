@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,15 +13,9 @@ import com.lafinance.dashboard.service.UsuarioService;
 @Transactional
 public class UsuarioServiceImpl implements UsuarioService{
 
-	private final UsuarioRepository repository;
-	
-	public UsuarioServiceImpl(UsuarioRepository repository) {
-		this.repository = repository;
-	}
-	
-	/**
-	 *Consultar usuario válido
-	 */
+	@Autowired
+	private UsuarioRepository repository;
+
 	@Override
 	public UsuarioDTO consultarUsuario(String usuario, String senha) {
 		return new UsuarioDTO(repository.consultarUsuario(usuario, senha));

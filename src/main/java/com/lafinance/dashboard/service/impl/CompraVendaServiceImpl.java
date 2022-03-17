@@ -2,8 +2,9 @@ package com.lafinance.dashboard.service.impl;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lafinance.dashboard.model.Acao;
+import com.lafinance.dashboard.service.AcaoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,31 +16,40 @@ import com.lafinance.dashboard.service.CompraVendaService;
 @Transactional
 public class CompraVendaServiceImpl implements CompraVendaService{
 
-	private final Logger log = LoggerFactory.getLogger(CompraVendaServiceImpl.class);
-	
-	private final CompraVendaRepository repository;
-	
-	public CompraVendaServiceImpl(CompraVendaRepository repository) {
-		this.repository = repository;
-	}	
-	
+	@Autowired
+	private CompraVendaRepository repository;
+
+	@Autowired
+	private AcaoService acaoService;
+
 	@Override
 	public void salvarRegistro(List<CompraVenda> compraVenda) {
 		repository.saveAll(compraVenda);
 		repository.flush();
-		log.debug("Armazenando entidade CompraVenda");
 	}
 
 	@Override
 	public List<CompraVenda> consultarCompraVendaPeloIdVenda(Integer id) {
-		log.debug("Consultar registros CompraVenda pelo id Venda");
 		return repository.findByVendaId(id);
 	}
 
 	@Override
-	public List<CompraVenda> consultarCompraVendaPeloIdCompra(Integer id) {
-		log.debug("Consultar registros CompraVenda pelo id Compra");
+	public List<CompraVenda> consultarCompraVendaPeloIdCompra(Integer id) {;
 		return repository.findByCompraId(id);
+	}
+
+	@Override
+	public void excluirCompraVendaPeloIdVenda(Integer id) {
+		try {
+			List<Acao> acaoList = this.acaoService.consultarAcoesPeloIdVenda(id);
+			this.acaoService.ativarAcoes(acaoList);
+
+			List<CompraVenda> registros = this.repository.findByVendaId(id);
+
+			this.repository.deleteInBatch(registros);
+		}catch (Exception e){
+			throw e;
+		}
 	}
 
 }

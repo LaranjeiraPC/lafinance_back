@@ -1,10 +1,12 @@
 package com.lafinance.dashboard.service.impl;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lafinance.dashboard.service.AlphaVantageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,7 +14,6 @@ import com.lafinance.dashboard.dto.AcaoDTO;
 import com.lafinance.dashboard.model.Acao;
 import com.lafinance.dashboard.repository.AcaoRepository;
 import com.lafinance.dashboard.service.AcaoService;
-import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;
 
@@ -20,86 +21,175 @@ import com.lafinance.dashboard.util.Response.TipoResponse;
 @Transactional
 public class AcaoServiceImpl implements AcaoService {
 
-    private final Logger log = LoggerFactory.getLogger(AcaoServiceImpl.class);
+    @Autowired
+    private AcaoRepository repository;
 
-    private final AcaoRepository repository;
-    private final AtivoService ativoService;
-
-    public AcaoServiceImpl(AcaoRepository repository, AtivoService ativoService) {
-        this.repository = repository;
-        this.ativoService = ativoService;
-    }
+    @Autowired
+    private AlphaVantageService alphaVantageService;
 
     @Override
-    public List<AcaoDTO> consultarAcoesAtivos() {
-        List<AcaoDTO> dtoList = new ArrayList<>();
-        List<Acao> acao = repository.findByAllAndStatus();
-        acao.forEach(a -> dtoList.add(new AcaoDTO(a)));
-        return dtoList;
-    }
+    public List<AcaoDTO> consultarAcoesAtivosOutrosMeses(Integer mes, Integer ano) {
+        try{
+            List<AcaoDTO> dtoList = new ArrayList<>();
 
-    @Override
-    public Response cadastrarAcao(Acao acao) {
-        Response response = new Response();
-        if(!acao.getAtivo().getNome().isEmpty()){
-            repository.save(acao);
-            response.setMensagem("Registro salvo com sucesso");
-            response.setTipo(TipoResponse.SUCESSO);
-        }else{
-            response.setMensagem("Erro ao salvar registro");
-            response.setTipo(TipoResponse.ERRO);
+            List<Acao> acao = repository.consultarAcoesAtivosOutrosMeses(mes, ano);
+
+            acao.forEach(a -> dtoList.add(new AcaoDTO(a)));
+            return dtoList;
+        }catch (Exception e){
+            throw e;
         }
-        return response;
     }
 
     @Override
-    public Response editarAcao(AcaoDTO acaoDTO) {
-        Response response = new Response();
-        Acao acao = repository.getOne(acaoDTO.getId());
-        if(acao != null){
+    public Response cadastrarAcao(Acao acao) throws Exception {
+        try{
+            if(acao.getAtivo().getNome().isEmpty()) {
+                throw new Exception();
+            }
+            repository.save(acao);
+
+            atualizarPrecoAtual();
+
+            return new Response("Registro salvo com sucesso",TipoResponse.SUCESSO, null);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public Response editarAcao(AcaoDTO acaoDTO) throws Exception {
+        try{
+            Acao acao = repository.getOne(acaoDTO.getId());
+
+            if(acao == null){
+                throw new Exception();
+            }
 
             acao.setQuantidade(acaoDTO.getQuantidade());
             acao.setDataCompra(acaoDTO.getDataCompra());
             acao.setValorAtivoPago(acaoDTO.getValorAtivoPago());
             acao.setValorBrutoPago(acaoDTO.getValorBrutoPago());
             acao.setStatus(acaoDTO.getStatus());
+            acao.setPrecoAlvo(acaoDTO.getPrecoAlvo());
 
             repository.save(acao);
-            response.setMensagem("Registro salvo com sucesso");
-            response.setTipo(TipoResponse.SUCESSO);
-        }else{
-            response.setMensagem("Erro ao salvar registro");
-            response.setTipo(TipoResponse.ERRO);
+            return new Response("Registro Editado com sucesso",TipoResponse.SUCESSO, null);
+        }catch (Exception e){
+            throw e;
         }
-        return response;
     }
 
     @Override
-    public void inativarAcoes(List<Acao> acoes) {
-        acoes.forEach(a -> {
-            Acao acao = this.repository.getOne(a.getId());
-            acao.setStatus("N");
-            this.repository.save(acao);
-        });
+    public Response inativarAcoes(List<Acao> acoes) {
+        try{
+            acoes.forEach(a -> a.setStatus("N"));
+            this.repository.saveAll(acoes);
+            return new Response("Registro salvo com sucesso",TipoResponse.SUCESSO, acoes);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public void ativarAcoes(List<Acao> acoes) {
+        try{
+            acoes.forEach(a -> {
+                Acao acao = this.repository.getOne(a.getId());
+                acao.setStatus("S");
+            });
+            this.repository.saveAll(acoes);
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     @Override
     public List<Acao> consultarAcoesId(List<Integer> id) {
-        return this.repository.consultarAcoesId(id);
+        try{
+            return this.repository.consultarAcoesId(id);
+        }catch (Exception e){
+            throw e;
+        }
+
+    }
+
+    @Override
+    public BigDecimal calcularLucroBruto(List<Integer> idsCompra) {
+        try{
+            return this.repository.calcularValorBrutoPago(idsCompra);
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     @Override
     public Response excluirAcao(Integer id) {
-        Response response = new Response();
         try{
             repository.delete(repository.getOne(id));
-            response.setMensagem("Registro excluido com sucesso");
-            response.setTipo(TipoResponse.SUCESSO);
+            return new Response("Registro excluido sucesso",TipoResponse.SUCESSO, null);
         }catch (Exception e){
-            response.setMensagem("Erro ao excluir registro");
-            response.setTipo(TipoResponse.ERRO);
+            throw e;
         }
-        return response;
     }
 
+    @Override
+    public List<AcaoDTO> consultarAcoesAtivosVenda(String nome) {
+        try{
+            List<AcaoDTO> dtos = new ArrayList<>();
+            this.repository.findByAtivoNome(nome).forEach(a -> dtos.add(new AcaoDTO(a)));
+            return dtos;
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Acao> consultarAcoesPeloIdVenda(Integer idVenda) {
+        try{
+            return this.repository.findByVenda(idVenda);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public Response atualizarPrecoAtual() {
+        try{
+            List<Acao> acao = repository.findByAllAndStatus();
+            acao.forEach(a -> {
+                if(!a.getMesAtualizacao().isEqual(LocalDate.now())){
+                    var atualizado = alphaVantageService.consultarPrecoAlvo(a.getAtivo().getNome());
+                    a.setPrecoHoje(atualizado);
+                    a.setMesAtualizacao(LocalDate.now());
+                }
+            });
+
+            return new Response("Preço atual dos ativos atualizados", TipoResponse.SUCESSO, null);
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public List<Acao> consultarAcoesAtivosMesCorrente(Integer mes, Integer ano) {
+        try{
+            List<Acao> acao = repository.consultarAcoesAtivosMesCorrente(ano, mes);
+            return acao;
+        }catch (Exception e){
+            throw e;
+        }
+    }
+
+    @Override
+    public List<AcaoDTO> consultarAcoesAtivos() {
+        try{
+            List<AcaoDTO> acaoDTO = new ArrayList<>();
+            List<Acao> acaoList = repository.findByAllAndStatus();
+            acaoList.forEach(a -> acaoDTO.add(new AcaoDTO(a)));
+            return acaoDTO;
+        }catch (Exception e){
+            throw e;
+        }
+    }
 }
