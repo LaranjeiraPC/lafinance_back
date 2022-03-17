@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,11 +16,8 @@ import com.lafinance.dashboard.service.UsuarioService;
 @RequestMapping("/api/usuario")
 public class UsuarioResource {
 
-	private final UsuarioService usuarioService;
-
-	public UsuarioResource(UsuarioService usuarioService) {
-		this.usuarioService = usuarioService;
-	}
+	@Autowired
+	private UsuarioService usuarioService;
 
 	@GetMapping("/autenticar/{usuario}/{senha}")
 	public ResponseEntity<UsuarioDTO> getLogin(

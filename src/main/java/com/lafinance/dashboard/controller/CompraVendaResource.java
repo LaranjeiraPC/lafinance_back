@@ -3,6 +3,7 @@ package com.lafinance.dashboard.controller;
 import java.util.List;
 
 import com.lafinance.dashboard.util.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,9 @@ import com.lafinance.dashboard.service.CompraVendaService;
 @RequestMapping("/api/compravenda")
 public class CompraVendaResource {
 
-	private final CompraVendaService compraVendaService;
+	@Autowired
+	private CompraVendaService compraVendaService;
 
-	public CompraVendaResource(CompraVendaService compraVendaService) {
-		this.compraVendaService = compraVendaService;
-	}
-	
 	@CrossOrigin
 	@GetMapping("/consulta/{id}")
 	public ResponseEntity<List<CompraVenda>> consultarDetalhesVenda(@PathVariable(name = "id") String id) {

@@ -16,6 +16,7 @@
 	<groupId>com.lafinance</groupId>
 	<artifactId>lafinance</artifactId>
 	<name>Lafinance</name>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<description>API Controle de compra e venda de acoes</description>
 

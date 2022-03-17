@@ -6,9 +6,6 @@ import java.util.List;
 
 import com.lafinance.dashboard.dto.AcaoDTO;
 import com.lafinance.dashboard.service.*;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +14,6 @@ import com.lafinance.dashboard.dto.DashDTO;
 import com.lafinance.dashboard.dto.VendaDTO;
 import com.lafinance.dashboard.model.CompraVenda;
 
-@Slf4j
 @Service
 @Transactional
 public class DashServiceImpl implements DashService {
@@ -41,7 +37,6 @@ public class DashServiceImpl implements DashService {
 
 	@Override
 	public DashDTO consultarDadosDahsboard() throws Exception {
-		log.debug("Calculando Investimento total");
 		DashDTO dto = new DashDTO();
 		LocalDate data = LocalDate.now();
 

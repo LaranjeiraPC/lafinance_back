@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,13 +14,10 @@ import com.lafinance.dashboard.service.DashService;
 @RestController
 @RequestMapping("/api/dash")
 public class DashResource {
-	
-	private final DashService dashService;
 
-	public DashResource(DashService dashService) {
-		this.dashService = dashService;
-	}
-	
+	@Autowired
+	private DashService dashService;
+
 	@CrossOrigin
 	@GetMapping("/consultar/")
 	public ResponseEntity<DashDTO> consultarDadosDahsboard() {

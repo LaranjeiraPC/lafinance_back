@@ -3,6 +3,7 @@ package com.lafinance.dashboard.controller;
 import java.util.List;
 
 import com.lafinance.dashboard.model.Ativo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +15,9 @@ import com.lafinance.dashboard.util.Response;
 @RestController
 @RequestMapping("/api/ativo")
 public class AtivoResource {
-	private final AtivoService ativoService;
 
-	public AtivoResource(AtivoService ativoService) {
-		this.ativoService = ativoService;
-	}
+	@Autowired
+	private AtivoService ativoService;
 
 	@CrossOrigin
 	@PostMapping("/salva/")

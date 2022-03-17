@@ -3,6 +3,7 @@ package com.lafinance.dashboard.controller;
 import java.util.List;
 
 import com.lafinance.dashboard.model.Acao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,24 +16,8 @@ import com.lafinance.dashboard.util.Response;
 @RequestMapping("/api/acao")
 public class AcaoResource {
 
-    private final AcaoService acaoService;
-
-    public AcaoResource(AcaoService acaoService) {
-        this.acaoService = acaoService;
-    }
-
-    @CrossOrigin
-    @GetMapping("/consulta/acoes/{mes}/{ano}")
-    public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivosOutrosMeses(
-            @PathVariable(name = "mes") Integer mes,
-            @PathVariable(name = "ano") Integer ano
-    ) {
-        try {
-            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosOutrosMeses(mes, ano));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
-    }
+    @Autowired
+    private AcaoService acaoService;
 
     @CrossOrigin
     @PostMapping("/salva/")
@@ -96,12 +81,25 @@ public class AcaoResource {
     }
 
     @CrossOrigin
-    @GetMapping("/consulta/{mes}/{ano}")
+    @GetMapping("/consulta/acoes/atual/{mes}/{ano}")
     public ResponseEntity<List<Acao>> consultarAcoesAtivosMesCorrente(
             @PathVariable(name = "mes") Integer mes,
             @PathVariable(name = "ano") Integer ano) {
         try {
             return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosMesCorrente(mes, ano));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping("/consulta/acoes/outros/{mes}/{ano}")
+    public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivosOutrosMeses(
+            @PathVariable(name = "mes") Integer mes,
+            @PathVariable(name = "ano") Integer ano
+    ) {
+        try {
+            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosOutrosMeses(mes, ano));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

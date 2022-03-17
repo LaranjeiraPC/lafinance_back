@@ -9,9 +9,6 @@ import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.service.CompraVendaService;
 import com.lafinance.dashboard.service.VendaService;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +20,6 @@ import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;
 import com.lafinance.dashboard.util.Util;
 
-@Slf4j
 @Service
 @Transactional
 public class VendaServiceImpl implements VendaService {
@@ -39,26 +35,21 @@ public class VendaServiceImpl implements VendaService {
 
 	@Autowired
 	private CompraVendaService compraVendaService;
-	
-	private Venda venda = new Venda();
 
 	@Override
 	public List<VendaDTO> consultarVendasPeloAnoMesSelecionado(String ano, String mes) {
         try{
-            log.debug("Consultar vendas pelo ano e mês");
             List<VendaDTO> dtoList = new ArrayList<>();
             repository.findByDataVenda(Integer.parseInt(ano),
                     Integer.parseInt(Util.converterNomeMesParaInteiro(mes))).forEach(a -> dtoList.add(new VendaDTO(a)));
             return dtoList;
         }catch (Exception e){
-            log.warn("Erro ao consultar registros", e);
             throw e;
         }
 	}
 
 	@Override
 	public List<VendaDTO> consultarVendasPeloAnoMesSelecionadoInteiro(String ano, String mes) {
-		log.debug("Consultar vendas pelo ano e mês");
 		List<VendaDTO> dtoList = new ArrayList<>();
 		repository.findByDataVenda(Integer.parseInt(ano),
 				Integer.parseInt(Util.ajustarNumeroMes(mes))).forEach(a -> dtoList.add(new VendaDTO(a)));
@@ -68,11 +59,8 @@ public class VendaServiceImpl implements VendaService {
 	@Override
 	public BigDecimal calcularLucroBruto(List<Integer> idVenda) {
         try{
-            log.info("Quantidade de ids venda: {}", idVenda);
-            log.debug("Consultando registros calculo lucro bruto");
             return this.repository.calcularLucroBruto(idVenda);
         }catch(Exception e){
-            log.warn("Erro ao calcular registro", e);
             throw e;
         }
 	}
@@ -80,9 +68,7 @@ public class VendaServiceImpl implements VendaService {
 	@Override
 	public Response cadastrar(Venda venda) {
 		try{
-            log.info("Cadastrando venda"
-            );
-			Response response = new Response();
+            Response response = new Response();
 			List<Venda> vendas = new ArrayList<>();
 			if(!venda.getAtivo().getNome().isEmpty()){
                 venda.setMesCriacao(LocalDate.now());
@@ -90,13 +76,12 @@ public class VendaServiceImpl implements VendaService {
 				venda = repository.saveAndFlush(venda);
 				vendas.add(venda);
 			}
-            log.debug("Registro salvo na base {}", venda.getId());
+
 			response.setMensagem("Registro salvo com sucesso");
 			response.setTipo(TipoResponse.SUCESSO);
 			response.setDtos(vendas);
 			return response;
 		}catch (Exception e){
-			log.warn("Erro ao salvar registro", e);
 			throw e;
 		}
 	}
@@ -111,27 +96,21 @@ public class VendaServiceImpl implements VendaService {
 			response.setTipo(TipoResponse.SUCESSO);
             return response;
 		}catch (Exception e){
-            log.warn("Erro ao excluir registro", e);
             throw e;
 		}
-
 	}
 
     @Override
     public Response editar(Venda venda) {
         Response response = new Response();
         try{
-            log.info("Atualizando registro id: {}", venda.getId());
             venda.setMesAtualizacao(LocalDate.now());
 
             this.repository.save(venda);
-            log.debug("Registro atualizado: {}", venda.getId());
-
             response.setMensagem("Registro salvo com sucesso");
             response.setTipo(TipoResponse.SUCESSO);
             return response;
         }catch (Exception e){
-            log.warn("Erro ao editar registro", e);
             throw e;
         }
     }
