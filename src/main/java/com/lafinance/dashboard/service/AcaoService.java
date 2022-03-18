@@ -9,7 +9,7 @@ import com.lafinance.dashboard.util.Response;
 
 public interface AcaoService {
 
-	List<AcaoDTO> consultarAcoesAtivosOutrosMeses(Integer mes, Integer ano) throws Exception;
+	List<AcaoDTO> consultarAcoesAtivosOutrosMeses(List<Acao> ids) throws Exception;
 	Response cadastrarAcao(Acao acao) throws Exception;
 	Response excluirAcao(Integer id);
 	Response editarAcao(AcaoDTO acao) throws Exception;

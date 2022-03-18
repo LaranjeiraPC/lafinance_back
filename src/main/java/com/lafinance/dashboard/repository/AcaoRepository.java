@@ -16,9 +16,9 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
 	@Query("SELECT a FROM Acao a where date_part('year', a.dataCompra) = :ano and date_part('month', a.dataCompra) = :mes and a.status = 'S'")
 	List<Acao> consultarAcoesAtivosMesCorrente(@Param("ano") Integer ano, @Param("mes") Integer mes);
 
-	@Query("SELECT a FROM Acao a where date_part('year', a.dataCompra) != :ano and date_part('month', a.dataCompra) != :mes and a.status = 'S'")
-	List<Acao> consultarAcoesAtivosOutrosMeses(@Param("ano") Integer ano, @Param("mes") Integer mes);
-	
+//	@Query("select a from acao a where a.id not in (:ids) and a.status = 's'")
+	List<Acao> findByIdNotInAndStatus(List<Integer> ids, String status);
+
 	@Query("SELECT a FROM Acao a where a.status = 'S'")
 	List<Acao> findByAllAndStatus();
 

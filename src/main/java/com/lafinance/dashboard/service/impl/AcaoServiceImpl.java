@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.lafinance.dashboard.service.AlphaVantageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,11 @@ public class AcaoServiceImpl implements AcaoService {
     private AlphaVantageService alphaVantageService;
 
     @Override
-    public List<AcaoDTO> consultarAcoesAtivosOutrosMeses(Integer mes, Integer ano) {
+    public List<AcaoDTO> consultarAcoesAtivosOutrosMeses(List<Acao> ids) {
         try{
             List<AcaoDTO> dtoList = new ArrayList<>();
-
-            List<Acao> acao = repository.consultarAcoesAtivosOutrosMeses(mes, ano);
-
-            acao.forEach(a -> dtoList.add(new AcaoDTO(a)));
+            var idsFormatado = ids.stream().map(acao -> acao.getId()).collect(Collectors.toList());
+            repository.findByIdNotInAndStatus(idsFormatado, "S").forEach(a -> dtoList.add(new AcaoDTO(a)));
             return dtoList;
         }catch (Exception e){
             throw e;

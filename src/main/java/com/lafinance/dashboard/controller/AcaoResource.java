@@ -93,13 +93,12 @@ public class AcaoResource {
     }
 
     @CrossOrigin
-    @GetMapping("/consulta/acoes/outros/{mes}/{ano}")
+    @PostMapping("/consulta/acoes/outros")
     public ResponseEntity<List<AcaoDTO>> consultarAcoesAtivosOutrosMeses(
-            @PathVariable(name = "mes") Integer mes,
-            @PathVariable(name = "ano") Integer ano
+            @RequestBody List<Acao> ids
     ) {
         try {
-            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosOutrosMeses(mes, ano));
+            return ResponseEntity.ok().body(acaoService.consultarAcoesAtivosOutrosMeses(ids));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
