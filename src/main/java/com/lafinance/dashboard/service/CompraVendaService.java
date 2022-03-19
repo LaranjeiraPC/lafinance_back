@@ -8,5 +8,5 @@ public interface CompraVendaService {
 	void salvarRegistro(List<CompraVenda> compraVenda);
 	List<CompraVenda> consultarCompraVendaPeloIdVenda(Integer id);
 	List<CompraVenda> consultarCompraVendaPeloIdCompra(Integer id);
-	void excluirCompraVendaPeloIdVenda(Integer id);
+	void excluirCompraVendaPeloIdVenda(Integer id) throws Exception;
 }

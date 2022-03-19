@@ -50,16 +50,16 @@ public class Acao implements Serializable {
 	@Column(name="datacriacao", nullable=false)
 	private LocalDate mesCriacao;
 	
-	@Column(name="dataatualizacao", nullable=true)
+	@Column(name="dataatualizacao")
 	private LocalDate mesAtualizacao;
 	
-	@Column(name="status", nullable=true)
+	@Column(name="status")
 	private String status;
 
-	@Column(name="precoalvo", nullable=true)
+	@Column(name="precoalvo")
 	private BigDecimal precoAlvo;
 
-	@Column(name="precohoje", nullable=true)
+	@Column(name="precohoje")
 	private BigDecimal precoHoje;
 	
 	public Acao() {}

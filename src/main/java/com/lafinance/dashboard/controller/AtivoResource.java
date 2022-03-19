@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.lafinance.dashboard.domain.dto.AtivoDTO;
 import com.lafinance.dashboard.service.AtivoService;
-import com.lafinance.dashboard.util.Response;
 
 @CrossOrigin
 @RestController
@@ -33,9 +32,10 @@ public class AtivoResource {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<AtivoDTO> editarAtivo(@RequestBody AtivoDTO ativoDTO) {
+    public ResponseEntity<Void> editarAtivo(@RequestBody AtivoDTO ativoDTO) {
         try {
-            return ResponseEntity.ok().body(ativoService.editarAtivo(ativoDTO));
+            ativoService.editarAtivo(ativoDTO);
+            return ResponseEntity.noContent().build();
         } catch (NenhumRegistroEncontradoException e) {
             return ResponseEntity.badRequest().header(HttpStatus.NOT_FOUND.toString(), e.getMessage()).build();
         } catch (Exception e) {
@@ -44,7 +44,7 @@ public class AtivoResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response> excluirAtivo(@PathVariable(name = "id") Integer id) {
+    public ResponseEntity<Void> excluirAtivo(@PathVariable(name = "id") Integer id) {
         try {
             ativoService.excluirAtivo(id);
             return ResponseEntity.noContent().build();

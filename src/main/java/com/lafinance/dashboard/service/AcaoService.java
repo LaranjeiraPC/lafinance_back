@@ -5,25 +5,21 @@ import java.util.List;
 
 import com.lafinance.dashboard.domain.dto.AcaoDTO;
 import com.lafinance.dashboard.domain.model.Acao;
-import com.lafinance.dashboard.util.Response;
 
 public interface AcaoService {
 
-	List<AcaoDTO> consultarAcoesAtivosOutrosMeses(List<Acao> ids) throws Exception;
-	Response cadastrarAcao(Acao acao) throws Exception;
-	Response excluirAcao(Integer id);
-	Response editarAcao(AcaoDTO acao) throws Exception;
-	List<AcaoDTO> consultarAcoesAtivosVenda(String nome);
-	List<Acao> consultarAcoesPeloIdVenda(Integer idVenda);
+	AcaoDTO cadastrarAcao(AcaoDTO acaoDTO) throws Exception;
+	void editarAcao(AcaoDTO acao) throws Exception;
+	void excluirAcao(Integer id) throws Exception;
+	List<AcaoDTO> listarAcoesAtivosVenda(String nome) throws Exception;
+	void inativarAcoes(List<AcaoDTO> acaoDTO);
+	List<AcaoDTO> listarAcoesAtivosMesCorrente(Integer mes, Integer ano) throws Exception;
+	List<AcaoDTO> listarAcoesAtivosOutrosMeses(List<Acao> ids) throws Exception;
+	List<AcaoDTO> listarAcoesAtivos() throws Exception;
 
-	Response inativarAcoes(List<Acao> acoes);
-	void ativarAcoes(List<Acao> acoes);
-	List<Acao> consultarAcoesId(List<Integer> id);
-	BigDecimal calcularLucroBruto(List<Integer> idsCompra);
-
-	Response atualizarPrecoAtual();
-	List<Acao> consultarAcoesAtivosMesCorrente(Integer mes, Integer ano);
-	List<AcaoDTO> consultarAcoesAtivos();
+	List<Acao> consultarAcoesPeloIdVenda(Integer idVenda) throws Exception;
+	void ativarAcoes(List<Acao> acoes) throws Exception;
+	BigDecimal calcularLucroBruto(List<Integer> idsCompra) throws Exception;
 
 
 }

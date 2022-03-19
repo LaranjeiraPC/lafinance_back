@@ -39,7 +39,7 @@ public class CompraVendaServiceImpl implements CompraVendaService{
 	}
 
 	@Override
-	public void excluirCompraVendaPeloIdVenda(Integer id) {
+	public void excluirCompraVendaPeloIdVenda(Integer id) throws Exception {
 		try {
 			List<Acao> acaoList = this.acaoService.consultarAcoesPeloIdVenda(id);
 			this.acaoService.ativarAcoes(acaoList);

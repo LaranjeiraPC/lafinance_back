@@ -87,7 +87,7 @@ public class VendaServiceImpl implements VendaService {
 	}
 
 	@Override
-	public Response excluir(Integer id) {
+	public Response excluir(Integer id) throws Exception {
 		Response response = new Response();
 		try{
 			this.compraVendaService.excluirCompraVendaPeloIdVenda(id);

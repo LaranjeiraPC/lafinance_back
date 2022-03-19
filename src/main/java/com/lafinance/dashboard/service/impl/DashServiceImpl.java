@@ -72,7 +72,7 @@ public class DashServiceImpl implements DashService {
 	}
 
 	private void consultarInvestimentoTotal() throws Exception {
-		List<AcaoDTO> acoes = acaoService.consultarAcoesAtivos();
+		List<AcaoDTO> acoes = acaoService.listarAcoesAtivos();
 		if (!acoes.isEmpty()) {
 			acoes.forEach(a -> {
 				investimentoTotal = investimentoTotal.add(a.getValorBrutoPago());

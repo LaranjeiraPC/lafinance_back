@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.lafinance.dashboard.domain.enums.StatusEnum;
+import com.lafinance.dashboard.exception.BusinessException;
+import com.lafinance.dashboard.exception.NenhumRegistroEncontradoException;
 import com.lafinance.dashboard.service.AlphaVantageService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,180 +19,151 @@ import com.lafinance.dashboard.domain.dto.AcaoDTO;
 import com.lafinance.dashboard.domain.model.Acao;
 import com.lafinance.dashboard.repository.AcaoRepository;
 import com.lafinance.dashboard.service.AcaoService;
-import com.lafinance.dashboard.util.Response;
-import com.lafinance.dashboard.util.Response.TipoResponse;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
 @Service
+@Singleton
 @Transactional
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class AcaoServiceImpl implements AcaoService {
 
-    @Autowired
-    private AcaoRepository repository;
+    public static final String NOME_DO_ATIVO_OBRIGATORIO = "Nome do Ativo obrigatório";
+    public static final String QUANTIDADE_PREENCHIMENTO_OBRIGATORIO = "Quantidade preenchimento obrigatório";
+    public static final String VALOR_BRUTO_PAGO_PREENCHIMENTO_OBRIGATORIO = "Valor bruto pago preenchimento obrigatório";
+    public static final String VALOR_ATIVO_PAGO_PREENCHIMENTO_OBRIGATORIO = "Valor ativo pago preenchimento obrigatório";
+    public static final String DATA_CRIACAO_PREENCHIMENTO_OBRIGATORIO = "Data Criação preenchimento obrigatório";
+    public static final String ENTIDADE_ACAO_NAO_ENCONTRADO = "Entidade Ação não encontrado";
+    public static final String NENHUM_REGISTRO_ENCONTRADO = "Nenhum registro encontrado";
+
+    private final AcaoRepository repository;
 
     @Autowired
     private AlphaVantageService alphaVantageService;
 
-    @Override
-    public List<AcaoDTO> consultarAcoesAtivosOutrosMeses(List<Acao> ids) {
-        try{
-            List<AcaoDTO> dtoList = new ArrayList<>();
-            var idsFormatado = ids.stream().map(acao -> acao.getId()).collect(Collectors.toList());
-            repository.findByIdNotInAndStatus(idsFormatado, "S").forEach(a -> dtoList.add(new AcaoDTO(a)));
-            return dtoList;
-        }catch (Exception e){
-            throw e;
-        }
+    public List<AcaoDTO> listarAcoesAtivosOutrosMeses(List<Acao> ids) {
+        List<AcaoDTO> dtoList = new ArrayList<>();
+
+        var idsFormatado = ids.stream().map(Acao::getId).collect(Collectors.toList());
+        if (idsFormatado.isEmpty())
+            new NenhumRegistroEncontradoException(NENHUM_REGISTRO_ENCONTRADO);
+
+        var acao = this.repository.findByIdNotInAndStatus(idsFormatado, "S");
+
+        acao.forEach(a -> dtoList.add(new AcaoDTO(a)));
+        return dtoList;
     }
 
-    @Override
-    public Response cadastrarAcao(Acao acao) throws Exception {
-        try{
-            if(acao.getAtivo().getNome().isEmpty()) {
-                throw new Exception();
-            }
-            repository.save(acao);
+    public AcaoDTO cadastrarAcao(AcaoDTO acaoDTO) throws Exception {
+        if (acaoDTO.getAtivo().getNome().isEmpty())
+            throw new BusinessException(NOME_DO_ATIVO_OBRIGATORIO);
 
-            atualizarPrecoAtual();
+        if (acaoDTO.getQuantidade() == null)
+            throw new BusinessException(QUANTIDADE_PREENCHIMENTO_OBRIGATORIO);
+        if (acaoDTO.getValorBrutoPago() == null)
+            throw new BusinessException(VALOR_BRUTO_PAGO_PREENCHIMENTO_OBRIGATORIO);
+        if (acaoDTO.getValorAtivoPago() == null)
+            throw new BusinessException(VALOR_ATIVO_PAGO_PREENCHIMENTO_OBRIGATORIO);
+        if (acaoDTO.getMesCriacao() == null)
+            throw new BusinessException(DATA_CRIACAO_PREENCHIMENTO_OBRIGATORIO);
 
-            return new Response("Registro salvo com sucesso",TipoResponse.SUCESSO, null);
-        }catch (Exception e){
-            throw e;
-        }
+        Acao acao = repository.save(criarAcao(acaoDTO));
+        return new AcaoDTO(acao);
     }
 
-    @Override
-    public Response editarAcao(AcaoDTO acaoDTO) throws Exception {
-        try{
-            Acao acao = repository.getOne(acaoDTO.getId());
+    public void editarAcao(AcaoDTO acaoDTO) throws Exception {
+        var acaoConsultado = this.repository.findById(acaoDTO.getId())
+                .orElseThrow(() -> new NenhumRegistroEncontradoException(ENTIDADE_ACAO_NAO_ENCONTRADO));
 
-            if(acao == null){
-                throw new Exception();
-            }
-
-            acao.setQuantidade(acaoDTO.getQuantidade());
-            acao.setDataCompra(acaoDTO.getDataCompra());
-            acao.setValorAtivoPago(acaoDTO.getValorAtivoPago());
-            acao.setValorBrutoPago(acaoDTO.getValorBrutoPago());
-            acao.setStatus(acaoDTO.getStatus());
-            acao.setPrecoAlvo(acaoDTO.getPrecoAlvo());
-
-            repository.save(acao);
-            return new Response("Registro Editado com sucesso",TipoResponse.SUCESSO, null);
-        }catch (Exception e){
-            throw e;
-        }
+        acaoConsultado.setQuantidade(acaoDTO.getQuantidade());
+        acaoConsultado.setDataCompra(acaoDTO.getDataCompra());
+        acaoConsultado.setValorAtivoPago(acaoDTO.getValorAtivoPago());
+        acaoConsultado.setValorBrutoPago(acaoDTO.getValorBrutoPago());
+        acaoConsultado.setStatus(acaoDTO.getStatus());
+        acaoConsultado.setPrecoAlvo(acaoDTO.getPrecoAlvo());
+        acaoConsultado.setMesAtualizacao(LocalDate.now());
+        repository.save(acaoConsultado);
     }
 
-    @Override
-    public Response inativarAcoes(List<Acao> acoes) {
-        try{
-            acoes.forEach(a -> a.setStatus("N"));
-            this.repository.saveAll(acoes);
-            return new Response("Registro salvo com sucesso",TipoResponse.SUCESSO, acoes);
-        }catch (Exception e){
-            throw e;
-        }
+    public void inativarAcoes(List<AcaoDTO> acaoDTO) {
+        List<Acao> acao = acaoDTO.stream().map(a -> {
+            a.setStatus(StatusEnum.INATIVO.getDescricao());
+            var dto = this.criarAcao(a);
+            dto.setId(a.getId());
+            dto.setMesAtualizacao(LocalDate.now());
+            return dto;
+        }).collect(Collectors.toList());
+        this.repository.saveAll(acao);
     }
 
-    @Override
-    public void ativarAcoes(List<Acao> acoes) {
-        try{
-            acoes.forEach(a -> {
-                Acao acao = this.repository.getOne(a.getId());
-                acao.setStatus("S");
-            });
-            this.repository.saveAll(acoes);
-        }catch (Exception e){
-            throw e;
-        }
+    public void ativarAcoes(List<Acao> acoes) throws Exception {
+        var idsFormatado = acoes.stream().map(Acao::getId).collect(Collectors.toList());
+
+        var acaoConsultado = this.repository.findByIdIn(idsFormatado).stream()
+                .peek(a -> a.setStatus(StatusEnum.ATIVO.getDescricao())).collect(Collectors.toList());
+
+        if (acaoConsultado.isEmpty())
+            throw new BusinessException(NENHUM_REGISTRO_ENCONTRADO);
+
+        this.repository.saveAll(acoes);
     }
 
-    @Override
-    public List<Acao> consultarAcoesId(List<Integer> id) {
-        try{
-            return this.repository.consultarAcoesId(id);
-        }catch (Exception e){
-            throw e;
-        }
-
-    }
-
-    @Override
     public BigDecimal calcularLucroBruto(List<Integer> idsCompra) {
-        try{
-            return this.repository.calcularValorBrutoPago(idsCompra);
-        }catch (Exception e){
-            throw e;
-        }
+        return this.repository.calcularValorBrutoPago(idsCompra);
     }
 
-    @Override
-    public Response excluirAcao(Integer id) {
-        try{
-            repository.delete(repository.getOne(id));
-            return new Response("Registro excluido sucesso",TipoResponse.SUCESSO, null);
-        }catch (Exception e){
-            throw e;
-        }
+    public void excluirAcao(Integer id) throws Exception {
+        var acaoConsultado = this.repository.findById(id)
+                .orElseThrow(() -> new NenhumRegistroEncontradoException(ENTIDADE_ACAO_NAO_ENCONTRADO));
+        repository.delete(acaoConsultado);
     }
 
-    @Override
-    public List<AcaoDTO> consultarAcoesAtivosVenda(String nome) {
-        try{
-            List<AcaoDTO> dtos = new ArrayList<>();
-            this.repository.findByAtivoNome(nome).forEach(a -> dtos.add(new AcaoDTO(a)));
-            return dtos;
-        }catch (Exception e){
-            throw e;
-        }
+    public List<AcaoDTO> listarAcoesAtivosVenda(String nome) {
+        List<AcaoDTO> dtos = new ArrayList<>();
+        this.repository.findByAtivoNome(nome).forEach(a -> dtos.add(new AcaoDTO(a)));
+        return dtos;
     }
 
-    @Override
-    public List<Acao> consultarAcoesPeloIdVenda(Integer idVenda) {
-        try{
-            return this.repository.findByVenda(idVenda);
-        }catch (Exception e){
-            throw e;
-        }
+    public List<Acao> consultarAcoesPeloIdVenda(Integer idVenda) throws Exception {
+        var acao = this.repository.findByVenda(idVenda);
+        if (acao.isEmpty())
+            throw new BusinessException(NENHUM_REGISTRO_ENCONTRADO);
+
+        return acao;
     }
 
-    @Override
-    public Response atualizarPrecoAtual() {
-        try{
-            List<Acao> acao = repository.findByAllAndStatus();
-            acao.forEach(a -> {
-                if(!a.getMesAtualizacao().isEqual(LocalDate.now())){
-                    var atualizado = alphaVantageService.consultarPrecoAlvo(a.getAtivo().getNome());
-                    a.setPrecoHoje(atualizado);
-                    a.setMesAtualizacao(LocalDate.now());
-                }
-            });
+    public List<AcaoDTO> listarAcoesAtivosMesCorrente(Integer mes, Integer ano) throws Exception {
+        List<Acao> acaoConsultado = repository.consultarAcoesAtivosMesCorrente(ano, mes);
+        if (acaoConsultado.isEmpty())
+            throw new BusinessException(NENHUM_REGISTRO_ENCONTRADO);
 
-            return new Response("Preço atual dos ativos atualizados", TipoResponse.SUCESSO, null);
-        }catch (Exception e){
-            throw e;
-        }
+        List<AcaoDTO> dtos = new ArrayList<>();
+        acaoConsultado.forEach(a -> dtos.add(new AcaoDTO(a)));
+        return dtos;
     }
 
-    @Override
-    public List<Acao> consultarAcoesAtivosMesCorrente(Integer mes, Integer ano) {
-        try{
-            List<Acao> acao = repository.consultarAcoesAtivosMesCorrente(ano, mes);
-            return acao;
-        }catch (Exception e){
-            throw e;
-        }
+    public List<AcaoDTO> listarAcoesAtivos() throws Exception {
+        List<AcaoDTO> acaoDTO = new ArrayList<>();
+        List<Acao> acao = repository.findByAllAndStatus();
+
+        if (acao.isEmpty())
+            throw new BusinessException(NENHUM_REGISTRO_ENCONTRADO);
+
+        acao.forEach(a -> acaoDTO.add(new AcaoDTO(a)));
+        return acaoDTO;
     }
 
-    @Override
-    public List<AcaoDTO> consultarAcoesAtivos() {
-        try{
-            List<AcaoDTO> acaoDTO = new ArrayList<>();
-            List<Acao> acaoList = repository.findByAllAndStatus();
-            acaoList.forEach(a -> acaoDTO.add(new AcaoDTO(a)));
-            return acaoDTO;
-        }catch (Exception e){
-            throw e;
-        }
+    private Acao criarAcao(AcaoDTO acaoDTO) {
+        Acao acao = new Acao();
+        acao.setAtivo(acaoDTO.getAtivo());
+        acao.setQuantidade(acaoDTO.getQuantidade());
+        acao.setValorBrutoPago(acaoDTO.getValorBrutoPago());
+        acao.setValorAtivoPago(acaoDTO.getValorAtivoPago());
+        acao.setDataCompra(acaoDTO.getDataCompra());
+        acao.setMesCriacao(acaoDTO.getMesCriacao());
+        acao.setStatus(acaoDTO.getStatus());
+        acao.setPrecoAlvo(acaoDTO.getPrecoAlvo());
+        return acao;
     }
 }

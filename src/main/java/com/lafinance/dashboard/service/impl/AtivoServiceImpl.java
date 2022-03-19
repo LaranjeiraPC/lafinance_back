@@ -3,7 +3,6 @@ package com.lafinance.dashboard.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import com.lafinance.dashboard.domain.enums.StatusEnum;
 import com.lafinance.dashboard.exception.BusinessException;
@@ -26,52 +25,55 @@ import javax.inject.Singleton;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class AtivoServiceImpl implements AtivoService {
 
+    public static final String ENTIDADE_ATIVO_NAO_ENCONTRADO = "Entidade Ativo não encontrado";
+    public static final String NOME_DO_ATIVO_OBRIGATORIO = "Nome do ativo obrigatório";
+    public static final String ENTIDADE_ATIVO_JA_CADASTRADO = "Entidade Ativo já cadastrado";
+
     private final AtivoRepository ativoRepository;
 
     public AtivoDTO consultarNomeAtivo(String nome) throws Exception {
         if (nome.isEmpty())
-            throw new BusinessException("Nome do ativo obrigatório");
+            throw new BusinessException(NOME_DO_ATIVO_OBRIGATORIO);
 
-        var ativo = ativoRepository.findByNome(nome);
+        var ativo = this.ativoRepository.findByNome(nome);
 
         if (Objects.isNull(ativo))
-            throw new NenhumRegistroEncontradoException("Nenhum registro encontrado pra o nome do ativo informado");
+            throw new NenhumRegistroEncontradoException(ENTIDADE_ATIVO_NAO_ENCONTRADO);
 
         return new AtivoDTO(ativo);
     }
 
     public AtivoDTO salvarAtivo(AtivoDTO ativoDTO) throws Exception {
-        var ativoConsultado = ativoRepository.findByNome(ativoDTO.getNome());
+        var ativoConsultado = this.ativoRepository.findByNome(ativoDTO.getNome());
         if (Objects.nonNull(ativoConsultado))
-            throw new BusinessException("Entidade Ativo já cadastrado");
+            throw new BusinessException(ENTIDADE_ATIVO_JA_CADASTRADO);
 
         Ativo ativo = new Ativo();
         ativo.setNome(ativoDTO.getNome());
         ativo.setStatus(StatusEnum.ATIVO.getDescricao());
-        ativo = ativoRepository.save(ativo);
+        ativo = this.ativoRepository.save(ativo);
 
         return new AtivoDTO(ativo);
     }
 
-    public AtivoDTO editarAtivo(AtivoDTO ativoDTO) throws Exception {
-        var ativoConsultado = ativoRepository.findById(ativoDTO.getId())
-                .orElseThrow(() -> new NenhumRegistroEncontradoException("Entidade Ativo não encontrado"));
+    public void editarAtivo(AtivoDTO ativoDTO) throws Exception {
+        var ativoConsultado = this.ativoRepository.findById(ativoDTO.getId())
+                .orElseThrow(() -> new NenhumRegistroEncontradoException(ENTIDADE_ATIVO_NAO_ENCONTRADO));
 
         ativoConsultado.setNome(ativoDTO.getNome());
         ativoConsultado.setStatus(ativoDTO.getStatus());
 
-        ativoConsultado = ativoRepository.save(ativoConsultado);
-        return new AtivoDTO(ativoConsultado);
+        this.ativoRepository.save(ativoConsultado);
     }
 
     public void excluirAtivo(Integer id) throws Exception {
         var ativoConsultado = ativoRepository.findById(id)
-                .orElseThrow(() -> new NenhumRegistroEncontradoException("Entidade Ativo não encontrado"));
-        ativoRepository.delete(ativoConsultado);
+                .orElseThrow(() -> new NenhumRegistroEncontradoException(ENTIDADE_ATIVO_NAO_ENCONTRADO));
+        this.ativoRepository.delete(ativoConsultado);
     }
 
     public List<AtivoDTO> listarAtivo() {
-        List<Ativo> ativos = ativoRepository.findAll();
+        List<Ativo> ativos = this.ativoRepository.findAll();
         List<AtivoDTO> dto = new ArrayList<>();
         ativos.forEach(a -> dto.add(new AtivoDTO(a)));
         return dto;

@@ -29,7 +29,7 @@ public class AnaliseServiceImpl implements AnaliseService {
     private AcaoService acaoService;
 
     @Override
-    public BigDecimal calcularLucroBruto(Integer idVenda) {
+    public BigDecimal calcularLucroBruto(Integer idVenda) throws Exception {
         List<CompraVenda> compraVendaList = this.analiseRepository.findByVendaId(idVenda);
         List<Integer> idsVenda = compraVendaList.stream().map(CompraVenda::getVenda).map(Venda::getId).collect(Collectors.toList());
         List<Integer> idsCompra = compraVendaList.stream().map(CompraVenda::getCompra).map(Acao::getId).collect(Collectors.toList());
