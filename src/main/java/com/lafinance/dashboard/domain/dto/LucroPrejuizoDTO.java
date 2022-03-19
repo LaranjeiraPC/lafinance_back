@@ -1,4 +1,4 @@
-package com.lafinance.dashboard.dto;
+package com.lafinance.dashboard.domain.dto;
 
 import lombok.Getter;
 import lombok.Setter;

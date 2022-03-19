@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.dto.UsuarioDTO;
-import com.lafinance.dashboard.model.Usuario;
+import com.lafinance.dashboard.domain.dto.UsuarioDTO;
+import com.lafinance.dashboard.domain.model.Usuario;
 import com.lafinance.dashboard.repository.UsuarioRepository;
 import com.lafinance.dashboard.service.UsuarioService;
 

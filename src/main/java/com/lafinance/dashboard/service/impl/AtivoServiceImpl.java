@@ -2,105 +2,78 @@ package com.lafinance.dashboard.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.lafinance.dashboard.domain.enums.StatusEnum;
+import com.lafinance.dashboard.exception.BusinessException;
+import com.lafinance.dashboard.exception.NenhumRegistroEncontradoException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.dto.AtivoDTO;
-import com.lafinance.dashboard.model.Ativo;
+import com.lafinance.dashboard.domain.dto.AtivoDTO;
+import com.lafinance.dashboard.domain.model.Ativo;
 import com.lafinance.dashboard.repository.AtivoRepository;
 import com.lafinance.dashboard.service.AtivoService;
-import com.lafinance.dashboard.util.Response;
-import com.lafinance.dashboard.util.Response.TipoResponse;
 
-@Slf4j
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 @Service
+@Singleton
 @Transactional
-public class AtivoServiceImpl implements AtivoService{
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
+public class AtivoServiceImpl implements AtivoService {
 
-	@Autowired
-	private AtivoRepository ativoRepository;
+    private final AtivoRepository ativoRepository;
 
-	@Override
-	public Ativo consultarNomeAtivo(String nome) {
-		log.debug("Consultando entidade Ativo pelo nome");
-		return ativoRepository.findByNome(nome);
-	}
+    public AtivoDTO consultarNomeAtivo(String nome) throws Exception {
+        if (nome.isEmpty())
+            throw new BusinessException("Nome do ativo obrigatório");
 
-	@Override
-	public Response salvarAtivo(Ativo ativo) {
-		Response response = new Response();
-		try {
-			Ativo ativoCheck = ativoRepository.findByNome(ativo.getNome());
+        var ativo = ativoRepository.findByNome(nome);
 
-			if(ativoCheck != null){
-				response.setTipo(TipoResponse.ERRO);
-				response.setMensagem("Entidade Ativo já cadastrado");
-				return response;
-			}
+        if (Objects.isNull(ativo))
+            throw new NenhumRegistroEncontradoException("Nenhum registro encontrado pra o nome do ativo informado");
 
-			ativo.setId(null);
-			ativo.setStatus("S");
-			ativoRepository.save(ativo);
+        return new AtivoDTO(ativo);
+    }
 
-			response.setTipo(TipoResponse.SUCESSO);
-			response.setMensagem("Entidade Ativo armazenado");
-			return response;
-		}catch(Exception e) {
-			response.setTipo(TipoResponse.ERRO);
-			response.setMensagem("Erro ao armazenar entidade Ativo");
-			return response;
-		}
-	}
+    public AtivoDTO salvarAtivo(AtivoDTO ativoDTO) throws Exception {
+        var ativoConsultado = ativoRepository.findByNome(ativoDTO.getNome());
+        if (Objects.nonNull(ativoConsultado))
+            throw new BusinessException("Entidade Ativo já cadastrado");
 
-	@Override
-	public Response editarAtivo(Ativo ativo) {
-		Response response = new Response();
-		try {
-			Ativo ativoUpdate = ativoRepository.findByNome(ativo.getNome());
-			ativoUpdate.setNome(ativo.getNome());
-			ativoUpdate.setStatus(ativo.getStatus());
-			
-			ativoRepository.save(ativoUpdate);
+        Ativo ativo = new Ativo();
+        ativo.setNome(ativoDTO.getNome());
+        ativo.setStatus(StatusEnum.ATIVO.getDescricao());
+        ativo = ativoRepository.save(ativo);
 
-			response.setTipo(TipoResponse.SUCESSO);
-			response.setMensagem("Entidade Ativo editado");
-			return response;
-		}catch(Exception e) {
-			response.setTipo(TipoResponse.ERRO);
-			response.setMensagem("Erro ao editar registro!");
-			return response;
-		}
-	}
+        return new AtivoDTO(ativo);
+    }
 
-	@Override
-	public Response excluirAtivo(Integer id) {
-		Response response = new Response();
-		try {
-			Ativo ativo = ativoRepository.getOne(id);
-			ativoRepository.delete(ativo);
+    public AtivoDTO editarAtivo(AtivoDTO ativoDTO) throws Exception {
+        var ativoConsultado = ativoRepository.findById(ativoDTO.getId())
+                .orElseThrow(() -> new NenhumRegistroEncontradoException("Entidade Ativo não encontrado"));
 
-			response.setMensagem("Entidade Ativo excluido");
-			response.setTipo(TipoResponse.SUCESSO);
-			return response;
-		}catch(Exception e) {
-			response.setTipo(TipoResponse.ERRO);
-			response.setMensagem("Erro ao excluir registro!");
-			return response;
-		}
-	}
+        ativoConsultado.setNome(ativoDTO.getNome());
+        ativoConsultado.setStatus(ativoDTO.getStatus());
 
-	@Override
-	public List<AtivoDTO> consultarAtivo() {
-		log.debug("Consultando registros entidade Ativo");
-		List<Ativo> ativos = ativoRepository.findAll();
-		List<AtivoDTO> dto = new ArrayList<>();
-		ativos.forEach(a -> dto.add(new AtivoDTO(a)));
-		return dto;
-	}
+        ativoConsultado = ativoRepository.save(ativoConsultado);
+        return new AtivoDTO(ativoConsultado);
+    }
 
+    public void excluirAtivo(Integer id) throws Exception {
+        var ativoConsultado = ativoRepository.findById(id)
+                .orElseThrow(() -> new NenhumRegistroEncontradoException("Entidade Ativo não encontrado"));
+        ativoRepository.delete(ativoConsultado);
+    }
+
+    public List<AtivoDTO> listarAtivo() {
+        List<Ativo> ativos = ativoRepository.findAll();
+        List<AtivoDTO> dto = new ArrayList<>();
+        ativos.forEach(a -> dto.add(new AtivoDTO(a)));
+        return dto;
+    }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.lafinance.dashboard.dto.DashDTO;
+import com.lafinance.dashboard.domain.dto.DashDTO;
 import com.lafinance.dashboard.service.DashService;
 
 @CrossOrigin

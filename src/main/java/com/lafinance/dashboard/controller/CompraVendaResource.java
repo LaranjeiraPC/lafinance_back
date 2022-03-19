@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.lafinance.dashboard.model.CompraVenda;
+import com.lafinance.dashboard.domain.model.CompraVenda;
 import com.lafinance.dashboard.service.CompraVendaService;
 
 @CrossOrigin

@@ -1,7 +1,7 @@
 package com.lafinance.dashboard.service;
 
-import com.lafinance.dashboard.dto.UsuarioDTO;
-import com.lafinance.dashboard.model.Usuario;
+import com.lafinance.dashboard.domain.dto.UsuarioDTO;
+import com.lafinance.dashboard.domain.model.Usuario;
 
 public interface UsuarioService {
 	

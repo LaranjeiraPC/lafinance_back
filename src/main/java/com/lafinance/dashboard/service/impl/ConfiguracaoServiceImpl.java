@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.dto.ConfiguracaoDTO;
-import com.lafinance.dashboard.model.Configuracao;
+import com.lafinance.dashboard.domain.dto.ConfiguracaoDTO;
+import com.lafinance.dashboard.domain.model.Configuracao;
 import com.lafinance.dashboard.repository.ConfiguracaoRepository;
 import com.lafinance.dashboard.service.ConfiguracaoService;
 import com.lafinance.dashboard.util.Response;

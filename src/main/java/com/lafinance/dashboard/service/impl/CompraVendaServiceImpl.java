@@ -2,13 +2,13 @@ package com.lafinance.dashboard.service.impl;
 
 import java.util.List;
 
-import com.lafinance.dashboard.model.Acao;
+import com.lafinance.dashboard.domain.model.Acao;
 import com.lafinance.dashboard.service.AcaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.model.CompraVenda;
+import com.lafinance.dashboard.domain.model.CompraVenda;
 import com.lafinance.dashboard.repository.CompraVendaRepository;
 import com.lafinance.dashboard.service.CompraVendaService;
 

@@ -2,12 +2,12 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
-import com.lafinance.dashboard.model.Acao;
+import com.lafinance.dashboard.domain.model.Acao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.lafinance.dashboard.dto.AcaoDTO;
+import com.lafinance.dashboard.domain.dto.AcaoDTO;
 import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.util.Response;
 

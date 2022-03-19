@@ -3,8 +3,8 @@ package com.lafinance.dashboard.service;
 import java.math.BigDecimal;
 import java.util.List;
 
-import com.lafinance.dashboard.dto.AcaoDTO;
-import com.lafinance.dashboard.model.Acao;
+import com.lafinance.dashboard.domain.dto.AcaoDTO;
+import com.lafinance.dashboard.domain.model.Acao;
 import com.lafinance.dashboard.util.Response;
 
 public interface AcaoService {

@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.lafinance.dashboard.model.Acao;
+import com.lafinance.dashboard.domain.model.Acao;
 
 @Repository
 public interface AcaoRepository extends JpaRepository<Acao, Integer> {

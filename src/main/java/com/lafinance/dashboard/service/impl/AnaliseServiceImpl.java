@@ -1,8 +1,8 @@
 package com.lafinance.dashboard.service.impl;
 
-import com.lafinance.dashboard.model.Acao;
-import com.lafinance.dashboard.model.CompraVenda;
-import com.lafinance.dashboard.model.Venda;
+import com.lafinance.dashboard.domain.model.Acao;
+import com.lafinance.dashboard.domain.model.CompraVenda;
+import com.lafinance.dashboard.domain.model.Venda;
 import com.lafinance.dashboard.repository.AnaliseRepository;
 import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.service.AnaliseService;

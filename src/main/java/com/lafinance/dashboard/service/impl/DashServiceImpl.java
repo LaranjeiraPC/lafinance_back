@@ -4,15 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.lafinance.dashboard.dto.AcaoDTO;
+import com.lafinance.dashboard.domain.dto.AcaoDTO;
 import com.lafinance.dashboard.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.dto.DashDTO;
-import com.lafinance.dashboard.dto.VendaDTO;
-import com.lafinance.dashboard.model.CompraVenda;
+import com.lafinance.dashboard.domain.dto.DashDTO;
+import com.lafinance.dashboard.domain.dto.VendaDTO;
+import com.lafinance.dashboard.domain.model.CompraVenda;
 
 @Service
 @Transactional

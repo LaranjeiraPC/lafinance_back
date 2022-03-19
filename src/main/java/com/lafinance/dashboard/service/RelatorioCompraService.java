@@ -1,6 +1,6 @@
 package com.lafinance.dashboard.service;
 
-import com.lafinance.dashboard.dto.RelatorioCompraDTO;
+import com.lafinance.dashboard.domain.dto.RelatorioCompraDTO;
 
 import java.util.List;
 

@@ -2,12 +2,14 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
-import com.lafinance.dashboard.model.Ativo;
+import com.lafinance.dashboard.exception.BusinessException;
+import com.lafinance.dashboard.exception.NenhumRegistroEncontradoException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.lafinance.dashboard.dto.AtivoDTO;
+import com.lafinance.dashboard.domain.dto.AtivoDTO;
 import com.lafinance.dashboard.service.AtivoService;
 import com.lafinance.dashboard.util.Response;
 
@@ -16,47 +18,63 @@ import com.lafinance.dashboard.util.Response;
 @RequestMapping("/api/ativo")
 public class AtivoResource {
 
-	@Autowired
-	private AtivoService ativoService;
+    @Autowired
+    private AtivoService ativoService;
 
-	@CrossOrigin
-	@PostMapping("/salva/")
-	public ResponseEntity<Response> cadastrarAtivo(@RequestBody Ativo ativo) {
-		try {
-			return ResponseEntity.ok().body(ativoService.salvarAtivo(ativo));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@PostMapping("/editar/")
-	public ResponseEntity<Response> editarAtivo(@RequestBody Ativo ativo) {
-		try {
-			return ResponseEntity.ok().body(ativoService.editarAtivo(ativo));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/excluir/{id}")
-	public ResponseEntity<Response> excluirAtivo(@PathVariable(name = "id") Integer id) {
-		try {
-			return ResponseEntity.ok().body(ativoService.excluirAtivo(id));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
-	@CrossOrigin
-	@GetMapping("/consulta/")
-	public ResponseEntity<List<AtivoDTO>> consultarAtivos() {
-		try {
-			return ResponseEntity.ok().body(ativoService.consultarAtivo());
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
-	
+    @PostMapping("/save")
+    public ResponseEntity<AtivoDTO> cadastrarAtivo(@RequestBody AtivoDTO ativoDTO) {
+        try {
+            return ResponseEntity.ok().body(ativoService.salvarAtivo(ativoDTO));
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().header(HttpStatus.BAD_REQUEST.toString(), e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/edit")
+    public ResponseEntity<AtivoDTO> editarAtivo(@RequestBody AtivoDTO ativoDTO) {
+        try {
+            return ResponseEntity.ok().body(ativoService.editarAtivo(ativoDTO));
+        } catch (NenhumRegistroEncontradoException e) {
+            return ResponseEntity.badRequest().header(HttpStatus.NOT_FOUND.toString(), e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Response> excluirAtivo(@PathVariable(name = "id") Integer id) {
+        try {
+            ativoService.excluirAtivo(id);
+            return ResponseEntity.noContent().build();
+        } catch (NenhumRegistroEncontradoException e) {
+            return ResponseEntity.badRequest().header(HttpStatus.NOT_FOUND.toString(), e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<List<AtivoDTO>> listarAtivo() {
+        try {
+            return ResponseEntity.ok().body(ativoService.listarAtivo());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/search/{nome}")
+    public ResponseEntity<AtivoDTO> consultarAtivoByNome(@PathVariable(name = "nome") String nome) {
+        try {
+            return ResponseEntity.ok().body(ativoService.consultarNomeAtivo(nome));
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().header(HttpStatus.BAD_REQUEST.toString(), e.getMessage()).build();
+        } catch (NenhumRegistroEncontradoException e) {
+            return ResponseEntity.notFound().header(HttpStatus.NOT_FOUND.toString(), e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }

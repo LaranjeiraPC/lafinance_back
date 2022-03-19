@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.lafinance.dashboard.dto.VendaDTO;
-import com.lafinance.dashboard.model.Venda;
+import com.lafinance.dashboard.domain.dto.VendaDTO;
+import com.lafinance.dashboard.domain.model.Venda;
 import com.lafinance.dashboard.repository.VendaRepository;
 import com.lafinance.dashboard.util.Response;
 import com.lafinance.dashboard.util.Response.TipoResponse;

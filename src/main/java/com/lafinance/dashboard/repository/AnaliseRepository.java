@@ -1,6 +1,6 @@
 package com.lafinance.dashboard.repository;
 
-import com.lafinance.dashboard.model.CompraVenda;
+import com.lafinance.dashboard.domain.model.CompraVenda;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

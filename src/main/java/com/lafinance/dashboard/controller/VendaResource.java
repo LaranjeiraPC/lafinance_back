@@ -2,12 +2,12 @@ package com.lafinance.dashboard.controller;
 
 import java.util.List;
 
-import com.lafinance.dashboard.model.Venda;
+import com.lafinance.dashboard.domain.model.Venda;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.lafinance.dashboard.dto.VendaDTO;
+import com.lafinance.dashboard.domain.dto.VendaDTO;
 import com.lafinance.dashboard.service.VendaService;
 import com.lafinance.dashboard.util.Response;
 

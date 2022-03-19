@@ -1,6 +1,6 @@
 package com.lafinance.dashboard.controller;
 
-import com.lafinance.dashboard.dto.RelatorioCompraDTO;
+import com.lafinance.dashboard.domain.dto.RelatorioCompraDTO;
 import com.lafinance.dashboard.service.RelatorioCompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
