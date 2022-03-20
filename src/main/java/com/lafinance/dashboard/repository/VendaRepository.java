@@ -2,6 +2,7 @@ package com.lafinance.dashboard.repository;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,9 @@ public interface VendaRepository extends JpaRepository<Venda, Integer> {
 
 	@Query("SELECT SUM(v.valorBrutoVenda) FROM Venda v where v.id = :idsVenda")
 	BigDecimal calcularLucroBruto(List<Integer> idsVenda);
+
+	Optional<Venda> findById(Integer id);
+
+	List<Venda> findByIdIn(List<Integer> ids);
 	
 }

@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.domain.dto;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class VendaDTO {
+public class VendaDTO implements Serializable {
 
 	private Integer id;
 	private Ativo ativo;

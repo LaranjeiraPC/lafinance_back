@@ -19,11 +19,11 @@ public class CompraVenda implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "compra", nullable = false)
 	private Acao compra;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne
 	@JoinColumn(name = "venda", nullable = false)
 	private Venda venda;
 	

@@ -22,9 +22,6 @@ import javax.persistence.Table;
 @Table(name = "venda")
 public class Venda implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3574568785078311013L;
 
 	@Id
@@ -50,7 +47,7 @@ public class Venda implements Serializable {
 	@Column(name="datacriacao", nullable=false)
 	private LocalDate mesCriacao;
 	
-	@Column(name="dataatualizacao", nullable=true)
+	@Column(name="dataatualizacao")
 	private LocalDate mesAtualizacao;
 		
 	public Venda() {}
