@@ -19,7 +19,7 @@ public interface AcaoService {
 
 	List<Acao> consultarAcoesPeloIdVenda(Integer idVenda) throws Exception;
 	void ativarAcoes(List<Acao> acoes) throws Exception;
-	BigDecimal calcularLucroBruto(List<Integer> idsCompra) throws Exception;
-
+	BigDecimal consultarInvestimentoTotal();
+	Integer consultaQuantidadeCota();
 
 }

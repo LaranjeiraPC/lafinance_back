@@ -23,12 +23,6 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
     @Query("SELECT a FROM Acao a where a.status = 'S'")
     List<Acao> findByAllAndStatus();
 
-    @Query("SELECT a FROM Acao a where a.id = :id")
-    List<Acao> consultarAcoesId(@Param("id") List<Integer> id);
-
-    @Query("SELECT SUM(a.valorBrutoPago) FROM Acao a where a.id = :idsCompra")
-    BigDecimal calcularValorBrutoPago(List<Integer> idsCompra);
-
     @Query("SELECT c.compra FROM CompraVenda c where c.venda.id = :id")
     List<Acao> findByVenda(Integer id);
 
@@ -37,4 +31,10 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
     Optional<Acao> findById(Integer id);
 
     List<Acao> findByIdIn(List<Integer> ids);
+
+    @Query("SELECT sum(a.valorBrutoPago) FROM Acao a where a.status = 'S' ")
+    BigDecimal consultarValorInvestimentoTotal();
+
+    @Query("SELECT sum(a.quantidade) FROM Acao a where a.status = 'S' ")
+    Integer consultarQuantidadeCotas();
 }

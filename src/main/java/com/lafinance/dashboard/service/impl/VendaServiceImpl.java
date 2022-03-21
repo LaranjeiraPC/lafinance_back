@@ -34,6 +34,7 @@ public class VendaServiceImpl implements VendaService {
     public static final String NOME_ATIVO_PREENCHIMENTO_OBRIGATORIO = "Nome ativo preenchimento obriqatório";
     public static final String NENHUM_REGISTRO_ENCONTRADO = "Nenhum registro encontrado";
     public static final String ID_NAO_INFORMADO = "ID não informado";
+    public static final String LUCRO_BRUTO_TOTAL_DA_VENDA_VAZIO = "Lucro Bruto total da venda vazio";
 
     private final VendaRepository repository;
 
@@ -57,22 +58,6 @@ public class VendaServiceImpl implements VendaService {
 
         vendasConsultado.forEach(a -> dtoList.add(new VendaDTO(a)));
         return dtoList;
-    }
-
-    public List<VendaDTO> consultarVendasPeloAnoMesSelecionadoInteiro(String ano, String mes) {
-        List<VendaDTO> dtoList = new ArrayList<>();
-        this.repository.findByDataVenda(Integer.parseInt(ano),
-                Integer.parseInt(Util.ajustarNumeroMes(mes))).forEach(a -> dtoList.add(new VendaDTO(a)));
-        return dtoList;
-    }
-
-    public BigDecimal calcularLucroBruto(List<Integer> idVenda) throws Exception {
-        var vendaConsultado = this.repository.findByIdIn(idVenda);
-
-        if (vendaConsultado.isEmpty())
-            throw new NenhumRegistroEncontradoException(NENHUM_REGISTRO_ENCONTRADO);
-
-        return this.repository.calcularLucroBruto(idVenda);
     }
 
     public VendaDTO cadastrar(VendaDTO vendaDTO) throws Exception {
@@ -111,4 +96,17 @@ public class VendaServiceImpl implements VendaService {
         vendaConsultado.setMesAtualizacao(LocalDate.now());
         this.repository.save(vendaConsultado);
     }
+
+    public BigDecimal calcularLucroBruto(Integer idVenda) throws Exception {
+        if (Objects.isNull(idVenda))
+            throw new NenhumRegistroEncontradoException(NENHUM_REGISTRO_ENCONTRADO);
+
+        var lucroBrutoTotalVenda = this.compraVendaService.calcularLucroBrutoTotalPeloIdVenda(idVenda);
+
+        if (Objects.isNull(lucroBrutoTotalVenda))
+            throw new BusinessException(LUCRO_BRUTO_TOTAL_DA_VENDA_VAZIO);
+
+        return lucroBrutoTotalVenda;
+    }
+
 }

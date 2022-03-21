@@ -18,8 +18,7 @@ public class DashResource {
 	@Autowired
 	private DashService dashService;
 
-	@CrossOrigin
-	@GetMapping("/consultar/")
+	@GetMapping("/search")
 	public ResponseEntity<DashDTO> consultarDadosDahsboard() {
 		try {
 			return ResponseEntity.ok().body(dashService.consultarDadosDahsboard());

@@ -12,13 +12,16 @@ import com.lafinance.dashboard.domain.model.CompraVenda;
 
 @Repository
 public interface CompraVendaRepository extends JpaRepository<CompraVenda, Integer> {
-	List<CompraVenda> findByVendaId(Integer id);
-	List<CompraVenda> findByCompraId(Integer id);
+    List<CompraVenda> findByVendaId(Integer id);
 
-	@Query("SELECT v FROM CompraVenda v where date_part('year', v.venda.dataVenda) = :ano order by v.venda.dataVenda asc")
-	List<CompraVenda> findByDataVenda(@Param("ano") Integer ano);
+    @Query("SELECT v FROM CompraVenda v where date_part('year', v.venda.dataVenda) = :ano order by v.venda.dataVenda asc")
+    List<CompraVenda> findByDataVenda(@Param("ano") Integer ano);
 
-	@Query("SELECT sum(v.venda.valorBrutoVenda - v.compra.valorBrutoPago) FROM CompraVenda v " +
-			" where date_part('year', v.venda.dataVenda) = :ano")
-	BigDecimal calculoLucroAno(@Param("ano") Integer ano);
+    @Query("SELECT sum(v.venda.valorBrutoVenda - v.compra.valorBrutoPago) FROM CompraVenda v " +
+            " where date_part('year', v.venda.dataVenda) = :ano")
+    BigDecimal calculoLucroAno(@Param("ano") Integer ano);
+
+    @Query("SELECT sum(v.venda.valorBrutoVenda - v.compra.valorBrutoPago) FROM CompraVenda v " +
+            " where v.venda.id = :id")
+    BigDecimal calculoLucroBrutoPeloIdVenda(@Param("id") Integer idVenda);
 }

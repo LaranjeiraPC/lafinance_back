@@ -17,11 +17,5 @@ public interface VendaRepository extends JpaRepository<Venda, Integer> {
 	@Query("SELECT a FROM Venda a where date_part('year', a.dataVenda) = :ano and date_part('month', a.dataVenda) = :mes")
 	List<Venda> findByDataVenda(@Param("ano") Integer ano, @Param("mes") Integer mes);
 
-	@Query("SELECT SUM(v.valorBrutoVenda) FROM Venda v where v.id = :idsVenda")
-	BigDecimal calcularLucroBruto(List<Integer> idsVenda);
-
 	Optional<Venda> findById(Integer id);
-
-	List<Venda> findByIdIn(List<Integer> ids);
-	
 }

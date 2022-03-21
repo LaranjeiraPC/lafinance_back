@@ -1,5 +1,6 @@
 package com.lafinance.dashboard.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.lafinance.dashboard.exception.BusinessException;
@@ -67,6 +68,20 @@ public class VendaResource {
             return ResponseEntity.badRequest().header(HttpStatus.NOT_FOUND.toString(), e.getMessage()).build();
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @GetMapping("/calc/{idVenda}")
+    public ResponseEntity<BigDecimal> calcularLucroBruto(
+            @PathVariable(name = "idVenda") Integer idVenda) {
+        try {
+            return ResponseEntity.ok().body(this.vendaService.calcularLucroBruto(idVenda));
+        } catch (NenhumRegistroEncontradoException e) {
+            return ResponseEntity.badRequest().header(HttpStatus.NOT_FOUND.toString(), e.getMessage()).build();
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().header(HttpStatus.BAD_REQUEST.toString(), e.getMessage()).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

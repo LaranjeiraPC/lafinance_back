@@ -109,10 +109,6 @@ public class AcaoServiceImpl implements AcaoService {
         this.repository.saveAll(acoes);
     }
 
-    public BigDecimal calcularLucroBruto(List<Integer> idsCompra) {
-        return this.repository.calcularValorBrutoPago(idsCompra);
-    }
-
     public void excluirAcao(Integer id) throws Exception {
         var acaoConsultado = this.repository.findById(id)
                 .orElseThrow(() -> new NenhumRegistroEncontradoException(ENTIDADE_ACAO_NAO_ENCONTRADO));
@@ -165,5 +161,13 @@ public class AcaoServiceImpl implements AcaoService {
         acao.setStatus(acaoDTO.getStatus());
         acao.setPrecoAlvo(acaoDTO.getPrecoAlvo());
         return acao;
+    }
+
+    public BigDecimal consultarInvestimentoTotal() {
+        return this.repository.consultarValorInvestimentoTotal();
+    }
+
+    public Integer consultaQuantidadeCota() {
+        return this.repository.consultarQuantidadeCotas();
     }
 }
