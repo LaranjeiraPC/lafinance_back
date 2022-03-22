@@ -68,10 +68,9 @@ public class AcaoResource {
     }
 
     @PostMapping("/disable")
-    public ResponseEntity<Void> inativarAcoes(@RequestBody List<AcaoDTO> acaoDTO) {
+    public ResponseEntity<List<AcaoDTO>> inativarAcoes(@RequestBody List<AcaoDTO> acaoDTO) {
         try {
-            acaoService.inativarAcoes(acaoDTO);
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().body(acaoService.inativarAcoes(acaoDTO));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

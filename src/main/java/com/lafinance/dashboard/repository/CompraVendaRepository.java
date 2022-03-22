@@ -24,4 +24,5 @@ public interface CompraVendaRepository extends JpaRepository<CompraVenda, Intege
     @Query("SELECT sum(v.venda.valorBrutoVenda - v.compra.valorBrutoPago) FROM CompraVenda v " +
             " where v.venda.id = :id")
     BigDecimal calculoLucroBrutoPeloIdVenda(@Param("id") Integer idVenda);
+
 }

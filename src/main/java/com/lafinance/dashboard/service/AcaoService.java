@@ -12,7 +12,7 @@ public interface AcaoService {
 	void editarAcao(AcaoDTO acao) throws Exception;
 	void excluirAcao(Integer id) throws Exception;
 	List<AcaoDTO> listarAcoesAtivosVenda(String nome) throws Exception;
-	void inativarAcoes(List<AcaoDTO> acaoDTO);
+	List<AcaoDTO> inativarAcoes(List<AcaoDTO> acaoDTO);
 	List<AcaoDTO> listarAcoesAtivosMesCorrente(Integer mes, Integer ano) throws Exception;
 	List<AcaoDTO> listarAcoesAtivosOutrosMeses(List<Acao> ids) throws Exception;
 	List<AcaoDTO> listarAcoesAtivos() throws Exception;

@@ -86,7 +86,8 @@ public class AcaoServiceImpl implements AcaoService {
         repository.save(acaoConsultado);
     }
 
-    public void inativarAcoes(List<AcaoDTO> acaoDTO) {
+    public List<AcaoDTO> inativarAcoes(List<AcaoDTO> acaoDTO) {
+        List<AcaoDTO> acaoDTOS = new ArrayList<>();
         List<Acao> acao = acaoDTO.stream().map(a -> {
             a.setStatus(StatusEnum.INATIVO.getDescricao());
             var dto = this.criarAcao(a);
@@ -94,7 +95,11 @@ public class AcaoServiceImpl implements AcaoService {
             dto.setMesAtualizacao(LocalDate.now());
             return dto;
         }).collect(Collectors.toList());
-        this.repository.saveAll(acao);
+
+        acao = this.repository.saveAll(acao);
+
+        acao.forEach(a -> acaoDTOS.add(new AcaoDTO(a)));
+        return acaoDTOS;
     }
 
     public void ativarAcoes(List<Acao> acoes) throws Exception {
