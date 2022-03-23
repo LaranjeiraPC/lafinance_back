@@ -51,7 +51,7 @@ public class AtivoResource {
         } catch (NenhumRegistroEncontradoException e) {
             return ResponseEntity.badRequest().header(HttpStatus.NOT_FOUND.toString(), e.getMessage()).build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -60,7 +60,7 @@ public class AtivoResource {
         try {
             return ResponseEntity.ok().body(ativoService.listarAtivo());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

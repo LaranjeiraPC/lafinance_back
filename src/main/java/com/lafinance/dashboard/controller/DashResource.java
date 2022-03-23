@@ -1,6 +1,7 @@
 package com.lafinance.dashboard.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,16 +16,16 @@ import com.lafinance.dashboard.service.DashService;
 @RequestMapping("/api/dash")
 public class DashResource {
 
-	@Autowired
-	private DashService dashService;
+    @Autowired
+    private DashService dashService;
 
-	@GetMapping("/search")
-	public ResponseEntity<DashDTO> consultarDadosDahsboard() {
-		try {
-			return ResponseEntity.ok().body(dashService.consultarDadosDahsboard());
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().build();
-		}
-	}
+    @GetMapping("/search")
+    public ResponseEntity<DashDTO> consultarDadosDahsboard() {
+        try {
+            return ResponseEntity.ok().body(dashService.consultarDadosDahsboard());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }

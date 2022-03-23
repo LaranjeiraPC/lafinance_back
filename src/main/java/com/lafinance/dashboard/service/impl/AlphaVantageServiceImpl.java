@@ -1,32 +1,33 @@
 package com.lafinance.dashboard.service.impl;
 
 import com.lafinance.dashboard.infrastructure.api.AlphaVantageAPI;
+import com.lafinance.dashboard.service.AcaoService;
 import com.lafinance.dashboard.service.AlphaVantageService;
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.math.BigDecimal;
+import java.util.List;
 
-@Slf4j
 @Service
+@Singleton
+@Transactional
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class AlphaVantageServiceImpl implements AlphaVantageService {
 
     @Autowired
     private AlphaVantageAPI alphaVantageAPI;
 
+    @Autowired
+    private AcaoService acaoService;
+
     private static BigDecimal PRECO_ALVO = BigDecimal.ZERO;
-
-    @Override
-    public BigDecimal consultarPrecoAlvo(String ativo) {
-            try {
-                PRECO_ALVO = BigDecimal.ZERO;
-                PRECO_ALVO = alphaVantageAPI.consultarPrecoAlvo(ativo);
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.error(e.getMessage());
-            }
-        return PRECO_ALVO;
+    public void atualizarUltimaCotacao() throws Exception {
+        List<String> acaoDTO = this.acaoService.listarAtivosAgrupandoByNomeAtivo();
+        this.acaoService.atualizarUltimaCotacao(this.alphaVantageAPI.consultarUltimaCotacao(acaoDTO));
     }
-
 }

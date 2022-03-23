@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lafinance.dashboard.config.AlphaVantageConfig;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,47 +12,63 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-@Slf4j
 @Service
 public class AlphaVantageAPI {
+
+    public static final String LIMITE__DISPONIBILIDADE_SERVICO = "Limite da requisição atingida. Aguardando disponibilidade do serviço!";
 
     @Autowired
     private AlphaVantageConfig alphaVantageConfig;
 
     private static HttpClient httpClient;
 
-    public BigDecimal consultarPrecoAlvo(String ativo) throws Exception {
-        log.debug("Consultar último preco do ativo <{}>", ativo);
-
+    public List<Map<String, BigDecimal>> consultarUltimaCotacao(List<String> ativo) throws Exception {
         try {
-            httpClient = HttpClient.newHttpClient();
+            List<Map<String, BigDecimal>> listaAtivoCotacao = new ArrayList<>();
 
-            URI uri = URI.create(alphaVantageConfig.url + ativo + alphaVantageConfig.interval + alphaVantageConfig.chave);
+            for (String a : ativo) {
+                Map<String, BigDecimal> ativoCotacao = new HashMap<>();
+                httpClient = HttpClient.newHttpClient();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .GET()
-                    .uri(uri)
-                    .build();
+                URI uri = URI.create(alphaVantageConfig.url + a + alphaVantageConfig.interval + alphaVantageConfig.chave);
 
-            HttpResponse<String> response = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                HttpRequest request = HttpRequest.newBuilder()
+                        .GET()
+                        .uri(uri)
+                        .build();
 
-            JsonNode mapping = new ObjectMapper().readValue(response.body(), JsonNode.class);
+                HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                JsonNode mapping = new ObjectMapper().readValue(response.body(), JsonNode.class);
 
-            if (response.statusCode() == 200 && mapping.get("Note") == null) {
-                BigDecimal node = extrairJson(response);
-                if (node != null) return node;
-            }else{
-                log.info("Error {}", response.statusCode());
-                Thread.sleep(60000);
-
-                HttpResponse<String> refreshResponse = this.httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-                BigDecimal node = extrairJson(refreshResponse);
-                if (node != null) return node;
-
+                if (mapping.get("Note") == null) {
+                    BigDecimal cotacao = extrairJson(response);
+                    if (cotacao != null) {
+                        ativoCotacao.put(a, cotacao);
+                        listaAtivoCotacao.add(ativoCotacao);
+                    }
+                } else {
+                    HttpResponse<String> refreshResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                    JsonNode refreshMapping = new ObjectMapper().readValue(refreshResponse.body(), JsonNode.class);
+                    while (refreshMapping.get("Note") != null) {
+                        Thread.sleep(60000);
+                        refreshResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+                        refreshMapping = new ObjectMapper().readValue(refreshResponse.body(), JsonNode.class);
+                        if (mapping.get("Note") == null) {
+                            BigDecimal cotacao = extrairJson(refreshResponse);
+                            if (cotacao != null) {
+                                ativoCotacao.put(a, cotacao);
+                                listaAtivoCotacao.add(ativoCotacao);
+                            }
+                        }
+                    }
+                }
             }
-            return null;
-
+            return listaAtivoCotacao;
         } catch (Exception e) {
             throw new Exception(e);
         }
@@ -69,6 +84,4 @@ public class AlphaVantageAPI {
         }
         return null;
     }
-
-
 }

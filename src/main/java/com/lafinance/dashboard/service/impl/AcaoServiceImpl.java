@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.lafinance.dashboard.domain.enums.StatusEnum;
@@ -174,5 +175,22 @@ public class AcaoServiceImpl implements AcaoService {
 
     public Integer consultaQuantidadeCota() {
         return this.repository.consultarQuantidadeCotas();
+    }
+
+    public List<String> listarAtivosAgrupandoByNomeAtivo() {
+        return this.repository.listarAtivosAgrupandoByNomeAtivo();
+    }
+
+    public void atualizarUltimaCotacao(List<Map<String, BigDecimal>> cotacoes) {
+        List<Acao> acoes = this.repository.findByAllAndStatusAndDataAtualizacaoNotEqualsNow();
+        for (Map<String, BigDecimal> cotacao : cotacoes) {
+            cotacao.entrySet().forEach(cot -> acoes.stream().forEach(ac -> {
+                if (ac.getAtivo().getNome().equals(cot.getKey())) {
+                    ac.setPrecoHoje(cot.getValue());
+                    ac.setMesAtualizacao(LocalDate.now());
+                }
+            }));
+        }
+        this.repository.saveAll(acoes);
     }
 }

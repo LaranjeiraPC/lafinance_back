@@ -2,6 +2,7 @@ package com.lafinance.dashboard.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 import com.lafinance.dashboard.domain.dto.AcaoDTO;
 import com.lafinance.dashboard.domain.model.Acao;
@@ -21,5 +22,7 @@ public interface AcaoService {
 	void ativarAcoes(List<Acao> acoes) throws Exception;
 	BigDecimal consultarInvestimentoTotal();
 	Integer consultaQuantidadeCota();
+	List<String> listarAtivosAgrupandoByNomeAtivo();
+	void atualizarUltimaCotacao(List<Map<String, BigDecimal>> cotacoes);
 
 }

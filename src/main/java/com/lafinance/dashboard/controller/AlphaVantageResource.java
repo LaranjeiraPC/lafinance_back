@@ -1,7 +1,9 @@
 package com.lafinance.dashboard.controller;
 
+import com.lafinance.dashboard.exception.BusinessException;
 import com.lafinance.dashboard.service.AlphaVantageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,13 +17,15 @@ public class AlphaVantageResource {
     @Autowired
     private AlphaVantageService alphaVantageService;
 
-    @CrossOrigin
-    @GetMapping("/ativo/{nome}")
-    public ResponseEntity<BigDecimal> consultarAcoesAtivos(@PathVariable(name = "nome") String nome) {
+    @GetMapping("/refresh")
+    public ResponseEntity<BigDecimal> atualizarUltimaCotacao() {
         try {
-            return ResponseEntity.ok().body(alphaVantageService.consultarPrecoAlvo(nome));
+            this.alphaVantageService.atualizarUltimaCotacao();
+            return ResponseEntity.noContent().build();
+        } catch (BusinessException e) {
+            return ResponseEntity.badRequest().header(HttpStatus.BAD_REQUEST.toString(), e.getMessage()).build();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

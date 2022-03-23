@@ -20,7 +20,7 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
     //	@Query("select a from acao a where a.id not in (:ids) and a.status = 's'")
     List<Acao> findByIdNotInAndStatus(List<Integer> ids, String status);
 
-    @Query("SELECT a FROM Acao a where a.status = 'S'")
+    @Query("SELECT a FROM Acao a where a.status = 'S' order by a.ativo.nome asc")
     List<Acao> findByAllAndStatus();
 
     @Query("SELECT c.compra FROM CompraVenda c where c.venda.id = :id")
@@ -37,4 +37,10 @@ public interface AcaoRepository extends JpaRepository<Acao, Integer> {
 
     @Query("SELECT sum(a.quantidade) FROM Acao a where a.status = 'S' ")
     Integer consultarQuantidadeCotas();
+
+    @Query("SELECT a FROM Acao a where a.status = 'S' and a.mesAtualizacao <> NOW() order by a.ativo.nome asc")
+    List<Acao> findByAllAndStatusAndDataAtualizacaoNotEqualsNow();
+
+    @Query("SELECT a.ativo.nome FROM Acao a where a.status = 'S' and a.mesAtualizacao <> NOW() group by a.ativo.nome ")
+    List<String> listarAtivosAgrupandoByNomeAtivo();
 }
