@@ -1,6 +1,7 @@
 package com.lafinance.dashboard.repository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,5 +25,14 @@ public interface CompraVendaRepository extends JpaRepository<CompraVenda, Intege
     @Query("SELECT sum(v.venda.valorBrutoVenda - v.compra.valorBrutoPago) FROM CompraVenda v " +
             " where v.venda.id = :id")
     BigDecimal calculoLucroBrutoPeloIdVenda(@Param("id") Integer idVenda);
+
+    @Query("SELECT c.venda.ativo.nome FROM CompraVenda c group by c.venda.ativo.nome ")
+    List<String> listarAtivosAgrupandoByNomeAtivo();
+
+    @Query("SELECT c.venda.dataVenda FROM CompraVenda c group by c.venda.dataVenda order by c.venda.dataVenda ")
+    List<LocalDate> listarAnos();
+
+    @Query("SELECT c.venda.dataVenda FROM CompraVenda c where date_part('year', c.venda.dataVenda) = :ano group by c.venda.dataVenda order by c.venda.dataVenda ")
+    List<LocalDate> listarMeses(@Param("ano") Integer ano);
 
 }

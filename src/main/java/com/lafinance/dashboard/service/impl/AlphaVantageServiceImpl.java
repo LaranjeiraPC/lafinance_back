@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -25,7 +24,6 @@ public class AlphaVantageServiceImpl implements AlphaVantageService {
     @Autowired
     private AcaoService acaoService;
 
-    private static BigDecimal PRECO_ALVO = BigDecimal.ZERO;
     public void atualizarUltimaCotacao() throws Exception {
         List<String> acaoDTO = this.acaoService.listarAtivosAgrupandoByNomeAtivo();
         this.acaoService.atualizarUltimaCotacao(this.alphaVantageAPI.consultarUltimaCotacao(acaoDTO));
