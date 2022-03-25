@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,15 @@ public class RelatorioServiceImpl implements RelatorioService {
             relatorioVenda.setLucroBrutoTotal(relatorioVenda.getValorBrutoVenda().subtract(relatorioVenda.getValorBrutoPago()));
             return relatorioVenda;
         }).collect(Collectors.groupingBy(RelatorioDTO::getMes));
+
+        for (var entry : relatorio.entrySet()) {
+            var totalMes = entry.getValue().stream().filter(re -> re.getMes() == entry.getKey()).map(RelatorioDTO::getLucroBrutoTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+            RelatorioDTO relatorioDTO = new RelatorioDTO();
+            relatorioDTO.setMes(entry.getKey());
+            relatorioDTO.setAtivo("Total Do Mês");
+            relatorioDTO.setLucroBrutoTotal(totalMes);
+            entry.getValue().add(relatorioDTO);
+        }
 
         return relatorio;
     }
